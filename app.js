@@ -3,7 +3,29 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var passport = require('passport');
 
+// Environment variables
+require('dotenv').config();
+
+// Mongoose
+mongoose.connect(
+    process.env.KOLV02_DATABASE || 'mongodb://localhost/kolv02',
+    {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+);
+
+// Models
+require("./models/User");
+
+// Passport
+require('./config/passport');
+
+// Routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -15,8 +37,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/API', indexRouter);
+app.use('/API/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
