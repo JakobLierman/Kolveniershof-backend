@@ -84,7 +84,9 @@ router.post("/register", function (req, res, next) {
   user.setPassword(req.body.password);
   user.firstName = req.body.firstName.trim();
   user.lastName = req.body.lastName.trim();
+  user.picture = req.body.picture;
   user.admin = req.body.admin;
+  user.birthDate = req.body.birthDate;
 
   user.save(function (err) {
     if (err) {
