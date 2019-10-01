@@ -20,7 +20,10 @@ mongoose.connect(
 );
 
 // Models
-require("./models/User");
+const normalizedPath = require("path").join(__dirname, "models");
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+    require("./models/" + file);
+});
 
 // Passport
 require('./config/passport');
