@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 
-let DaySchema = new mongoose.Schema({
+let WorkdaySchema = new mongoose.Schema({
     date: { type: Date, required: true, default: Date.now() },
     daycareMentors: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -25,4 +25,4 @@ let DaySchema = new mongoose.Schema({
     holiday: { type: Boolean, default: false }
 });
 
-mongoose.model('Day', DaySchema);
+mongoose.model('Workday', WorkdaySchema);
