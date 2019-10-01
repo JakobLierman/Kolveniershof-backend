@@ -58,7 +58,9 @@ router.patch("/:activityId", auth, function (req, res, next) {
 
 /* GET activityUnits */
 router.get("/units/", function(req, res, next) {
-    let query = ActivityUnit.find();
+    let query = ActivityUnit.find()
+        .populate("activity")
+        .populate("user");
     query.exec(function(err, activityUnits) {
         if (err) return next(err);
         res.json(activityUnits);
@@ -67,7 +69,9 @@ router.get("/units/", function(req, res, next) {
 
 /* GET activityUnit by id */
 router.param("activityUnitId", function (req, res, next, id) {
-    let query = ActivityUnit.findById(id);
+    let query = ActivityUnit.findById(id)
+        .populate("activity")
+        .populate("user");
     query.exec(function (err, activityUnit) {
         if (err) return next(err);
         if (!activityUnit) return next(new Error("not found " + id));
