@@ -22,6 +22,10 @@ let WorkdaySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ActivityUnit'
     }],
+    eveningBusses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BusUnit'
+    }],
     holiday: { type: Boolean, default: false }
 });
 
