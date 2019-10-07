@@ -39,6 +39,10 @@ var workdaysRouter = require('./routes/workdays');
 
 var app = express();
 
+// cors for cross origin requests
+let cors = require('cors');
+app.use(cors({ origin: '*' }));
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
