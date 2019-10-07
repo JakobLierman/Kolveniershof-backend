@@ -1,13 +1,132 @@
 <html>
-
-<head>
-  <title>Express</title>
-  <link rel="stylesheet" href="stylesheets/style.css">
-</head>
-
-<body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
-
+  <head>
+    <title>Express</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Source+Sans+Pro&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Express</h1>
+    <p>Welcome to Express</p>
+    <br />
+    <div class="display-4">
+      Activities
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            find all activities
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : activityId</button>
+          <button type="button" class="btn btn-secondary">
+            find activities by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            add a new activity
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">icon</button>
+          <button type="button" class="btn btn-dark">name</button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">/ : activityId</button>
+          <button type="button" class="btn btn-secondary">
+            delete activity by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">/ : activityId</button>
+          <button type="button" class="btn btn-secondary">
+            update activity by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/units/</button>
+          <button type="button" class="btn btn-secondary">
+            find all activity units
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">
+            /units/ : activityUnitId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            find activity unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">
+            /units/
+          </button>
+          <button type="button" class="btn btn-secondary">
+            add a new activity unit
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">activity</button>
+          <button type="button" class="btn btn-dark">mentors</button>
+          <button type="button" class="btn btn-dark">clients</button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">
+            /units/ : activityId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            delete activity unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">
+            /units/ : activityId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            update activity unit by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+    </ul>
+    <!--post: success, put: warning, get: primary, delete: danger-->
+  </body>
 </html>
