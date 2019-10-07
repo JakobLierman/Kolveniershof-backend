@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send('Backend up and running!');
+  res.render('index', { title: 'Kolveniershof API docs' });
 });
 
 module.exports = router;
