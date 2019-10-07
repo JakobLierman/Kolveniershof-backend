@@ -7,10 +7,17 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
-    <h1>Express</h1>
-    <p>Welcome to Express</p>
+    <h1>Backend <span class="badge badge-dark">Documentation</span></h1>
+    <p>
+      <span class="badge badge-pill badge-dark">
+        Go down to view the backend routes associated with their category names.
+      </span>
+    </p>
     <br />
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Activities-->
     <div class="display-4">
       Activities
     </div>
@@ -20,7 +27,7 @@
           <button type="button" class="btn btn-primary">Get</button>
           <button type="button" class="btn btn-light">/</button>
           <button type="button" class="btn btn-secondary">
-            find all activities
+            get all activities
           </button>
         </div>
       </li>
@@ -29,7 +36,7 @@
           <button type="button" class="btn btn-primary">Get</button>
           <button type="button" class="btn btn-light">/ : activityId</button>
           <button type="button" class="btn btn-secondary">
-            find activities by id
+            get activity by id
           </button>
         </div>
       </li>
@@ -71,7 +78,7 @@
           <button type="button" class="btn btn-primary">Get</button>
           <button type="button" class="btn btn-light">/units/</button>
           <button type="button" class="btn btn-secondary">
-            find all activity units
+            get all activity units
           </button>
         </div>
       </li>
@@ -82,7 +89,7 @@
             /units/ : activityUnitId
           </button>
           <button type="button" class="btn btn-secondary">
-            find activity unit by id
+            get activity unit by id
           </button>
         </div>
       </li>
@@ -107,7 +114,7 @@
         <div class="btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-danger">Delete</button>
           <button type="button" class="btn btn-light">
-            /units/ : activityId
+            /units/ : activityUnitId
           </button>
           <button type="button" class="btn btn-secondary">
             delete activity unit by id
@@ -118,7 +125,7 @@
         <div class="btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-warning">Patch</button>
           <button type="button" class="btn btn-light">
-            /units/ : activityId
+            /units/ : activityUnitId
           </button>
           <button type="button" class="btn btn-secondary">
             update activity unit by id
@@ -127,6 +134,394 @@
         </div>
       </li>
     </ul>
-    <!--post: success, put: warning, get: primary, delete: danger-->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Busses-->
+    <div class="display-4">
+      Busses
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            get all busses
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : busId</button>
+          <button type="button" class="btn btn-secondary">
+            get busses by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            add a new bus
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">name</button>
+          <button type="button" class="btn btn-dark">color</button>
+          <button type="button" class="btn btn-dark">icon</button>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">/ : busId</button>
+          <button type="button" class="btn btn-secondary">
+            delete bus by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">/ : busId</button>
+          <button type="button" class="btn btn-secondary">
+            update bus by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/units/</button>
+          <button type="button" class="btn btn-secondary">
+            get all bus units
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">
+            /units/ : busUnitId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            get bus unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">
+            /units/
+          </button>
+          <button type="button" class="btn btn-secondary">
+            add a new bus unit
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">bus</button>
+          <button type="button" class="btn btn-dark">mentors</button>
+          <button type="button" class="btn btn-dark">clients</button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">
+            /units/ : busUnitId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            delete bus unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">
+            /units/ : busUnitId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            update bus unit by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+    </ul>
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Groups-->
+    <div class="display-4">
+      Groups
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            get all groups
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : groupId</button>
+          <button type="button" class="btn btn-secondary">
+            get group by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            add a new group
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">name</button>
+          <button type="button" class="btn btn-dark">icon</button>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">/ : groupId</button>
+          <button type="button" class="btn btn-secondary">
+            delete group by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">/ : groupId</button>
+          <button type="button" class="btn btn-secondary">
+            update group by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+    </ul>
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Index-->
+    <div class="display-4">
+      Index
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            render index page (=page you're viewing right now)
+          </button>
+        </div>
+      </li>
+    </ul>
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Lunches-->
+    <div class="display-4">
+      Lunches
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/units/</button>
+          <button type="button" class="btn btn-secondary">
+            get all lunch units
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">
+            /units/ : lunchUnitId
+          </button>
+          <button type="button" class="btn btn-secondary">
+            get lunch unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/units/</button>
+          <button type="button" class="btn btn-secondary">
+            add a new lunch unit
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">lunch</button>
+          <button type="button" class="btn btn-dark">mentors</button>
+          <button type="button" class="btn btn-dark">clients</button>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">/ : lunchUnitId</button>
+          <button type="button" class="btn btn-secondary">
+            delete lunch unit by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">/ : lunchUnitId</button>
+          <button type="button" class="btn btn-secondary">
+            update lunch unit by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+    </ul>
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Users-->
+    <div class="display-4">
+      Users
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            get all users
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : userId</button>
+          <button type="button" class="btn btn-secondary">
+            get user by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : email</button>
+          <button type="button" class="btn btn-secondary">
+            get user by email
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/ : isValidEmail</button>
+          <button type="button" class="btn btn-secondary">
+            check if username is valid
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/ register</button>
+          <button type="button" class="btn btn-secondary">
+            add a new user
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">email</button>
+          <button type="button" class="btn btn-dark">password</button>
+          <button type="button" class="btn btn-dark">firstname</button>
+          <button type="button" class="btn btn-dark">lastname</button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/ login</button>
+          <button type="button" class="btn btn-secondary">
+            login
+          </button>
+        </div>
+      </li>
+    </ul>
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--Workdays-->
+    <div class="display-4">
+      Workdays
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            get all workdays
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-primary">Get</button>
+          <button type="button" class="btn btn-light">/ : workdayId</button>
+          <button type="button" class="btn btn-secondary">
+            get workday by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-success">Post</button>
+          <button type="button" class="btn btn-light">/</button>
+          <button type="button" class="btn btn-secondary">
+            add a new workday
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-info">required:</button>
+          <button type="button" class="btn btn-dark">date</button>
+          <button type="button" class="btn btn-dark">daycareMentors</button>
+          <button type="button" class="btn btn-dark">morningBusses</button>
+          <button type="button" class="btn btn-dark">amActivities</button>
+          <button type="button" class="btn btn-dark">lunch</button>
+          <button type="button" class="btn btn-dark">pmActivities</button>
+          <button type="button" class="btn btn-dark">holiday</button>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-light">/ : workdayId</button>
+          <button type="button" class="btn btn-secondary">
+            delete workday by id
+          </button>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-warning">Patch</button>
+          <button type="button" class="btn btn-light">/ : workdayId</button>
+          <button type="button" class="btn btn-secondary">
+            update workday by id
+          </button>
+          <strong>not yet implemented</strong>
+        </div>
+      </li>
+    </ul>
   </body>
 </html>
