@@ -6,4 +6,4 @@ let BusSchema = new mongoose.Schema({
     icon: {type: String, required: true} // TODO - store img
 });
 
-mongoose.model('Bus', BusSchema);
+mongoose.model('Bus', BusSchema, 'busses');

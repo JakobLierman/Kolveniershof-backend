@@ -72,7 +72,8 @@ router.post("/register", function(req, res, next) {
     !req.body.email ||
     !req.body.password ||
     !req.body.firstName ||
-    !req.body.lastName
+    !req.body.lastName ||
+    !req.body.birthday
   )
     return res.status(400).json({ message: "Please fill out all fields." });
   // Check if password is strong enough
@@ -86,13 +87,13 @@ router.post("/register", function(req, res, next) {
   user.lastName = req.body.lastName.trim();
   user.picture = req.body.picture;
   user.admin = req.body.admin;
-  user.birthDate = req.body.birthDate;
+  user.birthday = req.body.birthday;
 
   user.save(function(err) {
     if (err) {
       return next(err);
     }
-    user.tempToken = user.generateJWT();
+    user.token = user.generateJWT();
     return res.json(user);
   });
 });
@@ -107,7 +108,7 @@ router.post("/login", function(req, res, next) {
       return next(err);
     }
     if (user) {
-      user.tempToken = user.generateJWT();
+      user.token = user.generateJWT();
       return res.json(user);
     } else {
       return res.status(401).send(info);

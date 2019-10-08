@@ -16,7 +16,7 @@ let UserSchema = new mongoose.Schema({
     absentDates: [{type: Date}],
     hash: String,
     salt: String,
-    tempToken: String
+    token: String
 });
 
 UserSchema.methods.setPassword = function (password) {
