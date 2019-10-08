@@ -10,10 +10,10 @@ passport.use(
                 return done(err);
             }
             if (!user) {
-                return done(null, false, "Incorrect email address."); // TODO - i18n
+                return done(null, false, "Ongeldig emailadres."); // TODO - i18n
             }
             if (!user.validPassword(password)) {
-                return done(null, false, "Incorrect password."); // TODO - i18n
+                return done(null, false, "Ongeldig wachtwoord."); // TODO - i18n
             }
             return done(null, user);
         });

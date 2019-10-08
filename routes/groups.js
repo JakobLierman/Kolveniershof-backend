@@ -35,7 +35,7 @@ router.get("/:groupId", auth, function (req, res, next) {
 router.post("/", auth, function (req, res, next) {
     let group = new Group({
         name: req.body.name,
-        icon: req.body.icon
+        members: req.body.members
     });
     group.save(function (err, group) {
         if (err) return next(err);

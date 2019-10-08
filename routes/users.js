@@ -90,9 +90,7 @@ router.post("/register", function(req, res, next) {
   user.birthday = req.body.birthday;
 
   user.save(function(err) {
-    if (err) {
-      return next(err);
-    }
+    if (err) return next(err);
     user.token = user.generateJWT();
     return res.json(user);
   });
@@ -114,6 +112,27 @@ router.post("/login", function(req, res, next) {
       return res.status(401).send(info);
     }
   })(req, res, next);
+});
+
+/* PATCH user */
+router.patch("/id/:userId", function(req, res, next) {
+  let user = req.user;
+  if (req.body.firstName)
+    user.firstName = req.body.firstName;
+  if (req.body.lastName)
+    user.lastName = req.body.lastName;
+  if (req.body.email)
+    user.email = req.body.email;
+  if (req.body.picture)
+    user.picture = req.body.picture;
+  if (req.body.admin)
+    user.admin = req.body.admin;
+  if (req.body.birthday)
+    user.birthday = req.body.birthday;
+  user.save(function(err) {
+    if (err) return next(err);
+    return res.json(user);
+  });
 });
 
 module.exports = router;

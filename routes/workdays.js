@@ -9,10 +9,12 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 /* GET workdays */
 router.get('/', auth, function(req, res, next) {
     let query = Workday.find()
-        .populate("user")
-        .populate("busUnit")
-        .populate("activityUnit")
-        .populate("lunchUnit"); // TODO - nested populate
+        .populate("daycareMentors")
+        .populate({ path: "morningBusses", populate: ['bus', 'mentors', 'clients'] })
+        .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
     query.exec(function(err, workdays) {
         if (err) return next(err);
         res.json(workdays);
@@ -22,10 +24,12 @@ router.get('/', auth, function(req, res, next) {
 /* GET workday by id */
 router.param("workdayId", function (req, res, next, id) {
     let query = Workday.findById(id)
-        .populate("user")
-        .populate("busUnit")
-        .populate("activityUnit")
-        .populate("lunchUnit"); // TODO - nested populate
+        .populate("daycareMentors")
+        .populate({ path: "morningBusses", populate: ['bus', 'mentors', 'clients'] })
+        .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found with id: " + id));
@@ -49,10 +53,10 @@ router.param("date", function (req, res, next, dateString) {
     let query = Workday.findOne({ date: date })
         .populate("daycareMentors")
         .populate({ path: "morningBusses", populate: ['bus', 'mentors', 'clients'] })
-        .populate({ path: "amActivities" })
-        .populate({ path: "pmActivities" })
-        .populate({ path: "eveningBusses" })
-        .populate({ path: "lunch" }); // TODO - nested populate
+        .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
+        .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found on date: " + date));
