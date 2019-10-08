@@ -60,8 +60,7 @@ router.patch("/:busId", auth, function (req, res, next) {
 /* GET busUnits */
 router.get("/units/", auth, function(req, res, next) {
     let query = BusUnit.find()
-        .populate("activity")
-        .populate("user");
+        .populate(['bus', 'mentors', 'clients']);
     query.exec(function(err, busUnits) {
         if (err) return next(err);
         res.json(busUnits);
@@ -71,8 +70,7 @@ router.get("/units/", auth, function(req, res, next) {
 /* GET busUnit by id */
 router.param("busUnitId", function (req, res, next, id) {
     let query = BusUnit.findById(id)
-        .populate("bus")
-        .populate("user");
+        .populate(['bus', 'mentors', 'clients']);
     query.exec(function (err, busUnit) {
         if (err) return next(err);
         if (!busUnit) return next(new Error("not found " + id));
