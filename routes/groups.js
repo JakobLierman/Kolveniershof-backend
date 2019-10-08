@@ -9,7 +9,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 /* GET groups */
 router.get('/', auth, function(req, res, next) {
     let query = Group.find()
-        .populate("user");
+        .populate("members");
     query.exec(function(err, groups) {
         if (err) return next(err);
         res.json(groups);
@@ -19,7 +19,7 @@ router.get('/', auth, function(req, res, next) {
 /* GET group by id */
 router.param("groupId", function (req, res, next, id) {
     let query = Group.findById(id)
-        .populate("user");
+        .populate("members");
     query.exec(function (err, group) {
         if (err) return next(err);
         if (!group) return next(new Error("not found " + id));
@@ -35,7 +35,7 @@ router.get("/:groupId", auth, function (req, res, next) {
 router.post("/", auth, function (req, res, next) {
     let group = new Group({
         name: req.body.name,
-        icon: req.body.icon
+        members: req.body.members
     });
     group.save(function (err, group) {
         if (err) return next(err);
@@ -53,8 +53,15 @@ router.delete("/:groupId", auth, function (req, res, next) {
 
 /* PATCH group */
 router.patch("/:groupId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let group = req.group;
+    if (req.body.name)
+        group.name = req.body.name;
+    if (req.body.members)
+        group.members = req.body.members;
+    group.save(function (err, group) {
+        if (err) return next(err);
+        res.json(group);
+    });
 });
 
 module.exports = router;

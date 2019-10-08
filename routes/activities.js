@@ -52,15 +52,21 @@ router.delete("/:activityId", auth, function (req, res, next) {
 
 /* PATCH activity */
 router.patch("/:activityId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let activity = req.body.activity;
+    if (req.body.name)
+        activity.name = req.body.name;
+    if (req.body.icon)
+        activity.icon = req.body.icon;
+    activity.save(function (err, activity) {
+        if (err) return next(err);
+        res.json(activity);
+    });
 });
 
 /* GET activityUnits */
 router.get("/units/", auth, function(req, res, next) {
     let query = ActivityUnit.find()
-        .populate("activity")
-        .populate("user");
+        .populate(['activity', 'mentors', 'clients']);
     query.exec(function(err, activityUnits) {
         if (err) return next(err);
         res.json(activityUnits);
@@ -70,8 +76,7 @@ router.get("/units/", auth, function(req, res, next) {
 /* GET activityUnit by id */
 router.param("activityUnitId", auth, function (req, res, next, id) {
     let query = ActivityUnit.findById(id)
-        .populate("activity")
-        .populate("user");
+        .populate(['activity', 'mentors', 'clients']);
     query.exec(function (err, activityUnit) {
         if (err) return next(err);
         if (!activityUnit) return next(new Error("not found " + id));
@@ -106,8 +111,17 @@ router.delete("/units/:activityUnitId", auth, function (req, res, next) {
 
 /* PATCH activityUnit */
 router.patch("/units/:activityUnitId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let activityUnit = req.body.activityUnit;
+    if (req.body.activity)
+        activityUnit.activity = req.body.activity;
+    if (req.body.mentors)
+        activityUnit.mentors = req.body.mentors;
+    if (req.body.clients)
+        activityUnit.clients = req.body.clients;
+    activityUnit.save(function (err, activityUnit) {
+        if (err) return next(err);
+        res.json(activityUnit);
+    });
 });
 
 module.exports = router;

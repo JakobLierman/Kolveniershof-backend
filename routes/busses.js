@@ -53,15 +53,23 @@ router.delete("/:busId", auth, function (req, res, next) {
 
 /* PATCH bus */
 router.patch("/:busId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let bus = req.body.bus;
+    if (req.body.name)
+        bus.name = req.body.name;
+    if (req.body.color)
+        bus.color = req.body.color;
+    if (req.body.icon)
+        bus.icon = req.body.icon;
+    bus.save(function (err, bus) {
+        if (err) return next(err);
+        res.json(bus);
+    });
 });
 
 /* GET busUnits */
 router.get("/units/", auth, function(req, res, next) {
     let query = BusUnit.find()
-        .populate("activity")
-        .populate("user");
+        .populate(['bus', 'mentors', 'clients']);
     query.exec(function(err, busUnits) {
         if (err) return next(err);
         res.json(busUnits);
@@ -71,8 +79,7 @@ router.get("/units/", auth, function(req, res, next) {
 /* GET busUnit by id */
 router.param("busUnitId", function (req, res, next, id) {
     let query = BusUnit.findById(id)
-        .populate("bus")
-        .populate("user");
+        .populate(['bus', 'mentors', 'clients']);
     query.exec(function (err, busUnit) {
         if (err) return next(err);
         if (!busUnit) return next(new Error("not found " + id));
@@ -107,8 +114,17 @@ router.delete("/units/:busUnitId", auth, function (req, res, next) {
 
 /* PATCH busUnit */
 router.patch("/units/:busUnitId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let busUnit = req.body.busUnit;
+    if (req.body.bus)
+        busUnit.bus = req.body.bus;
+    if (req.body.mentors)
+        busUnit.mentors = req.body.mentors;
+    if (req.body.clients)
+        busUnit.clients = req.body.clients;
+    busUnit.save(function (err, busUnit) {
+        if (err) return next(err);
+        res.json(busUnit);
+    });
 });
 
 module.exports = router;

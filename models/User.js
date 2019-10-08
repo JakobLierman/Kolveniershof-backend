@@ -6,17 +6,13 @@ let UserSchema = new mongoose.Schema({
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    picture: {type: String}, // TODO - store img
+    picture: {type: String},
     admin: {type: Boolean, default: false},
     birthday: {type: Date, required: true},
-    group: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group'
-    },
     absentDates: [{type: Date}],
     hash: String,
     salt: String,
-    tempToken: String
+    token: String
 });
 
 UserSchema.methods.setPassword = function (password) {

@@ -11,7 +11,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
-  let query = User.find().populate("group");
+  let query = User.find();
   query.sort("firstName");
   query.exec(function(err, users) {
     if (err) return next(err);
@@ -21,7 +21,7 @@ router.get("/", function(req, res, next) {
 
 /* GET user by id. */
 router.param("userId", function(req, res, next, id) {
-  let query = User.findById(id).populate("group");
+  let query = User.findById(id);
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("not found " + id));
@@ -36,7 +36,7 @@ router.get("/id/:userId", function(req, res, next) {
 
 /* GET user by email. */
 router.param("email", function(req, res, next, email) {
-  let query = User.find({ email: email }).populate("group");
+  let query = User.find({ email: email });
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("not found " + email));
@@ -72,7 +72,8 @@ router.post("/register", function(req, res, next) {
     !req.body.email ||
     !req.body.password ||
     !req.body.firstName ||
-    !req.body.lastName
+    !req.body.lastName ||
+    !req.body.birthday
   )
     return res.status(400).json({ message: "Please fill out all fields." });
   // Check if password is strong enough
@@ -86,13 +87,11 @@ router.post("/register", function(req, res, next) {
   user.lastName = req.body.lastName.trim();
   user.picture = req.body.picture;
   user.admin = req.body.admin;
-  user.birthDate = req.body.birthDate;
+  user.birthday = req.body.birthday;
 
   user.save(function(err) {
-    if (err) {
-      return next(err);
-    }
-    user.tempToken = user.generateJWT();
+    if (err) return next(err);
+    user.token = user.generateJWT();
     return res.json(user);
   });
 });
@@ -107,12 +106,33 @@ router.post("/login", function(req, res, next) {
       return next(err);
     }
     if (user) {
-      user.tempToken = user.generateJWT();
+      user.token = user.generateJWT();
       return res.json(user);
     } else {
       return res.status(401).send(info);
     }
   })(req, res, next);
+});
+
+/* PATCH user */
+router.patch("/id/:userId", function(req, res, next) {
+  let user = req.user;
+  if (req.body.firstName)
+    user.firstName = req.body.firstName;
+  if (req.body.lastName)
+    user.lastName = req.body.lastName;
+  if (req.body.email)
+    user.email = req.body.email;
+  if (req.body.picture)
+    user.picture = req.body.picture;
+  if (req.body.admin)
+    user.admin = req.body.admin;
+  if (req.body.birthday)
+    user.birthday = req.body.birthday;
+  user.save(function(err) {
+    if (err) return next(err);
+    return res.json(user);
+  });
 });
 
 module.exports = router;
