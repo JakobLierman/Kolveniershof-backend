@@ -28,12 +28,36 @@ router.param("workdayId", function (req, res, next, id) {
         .populate("lunchUnit"); // TODO - nested populate
     query.exec(function (err, workday) {
         if (err) return next(err);
-        if (!workday) return next(new Error("not found " + id));
+        if (!workday) return next(new Error("No Workday found with id: " + id));
         req.workday = workday;
         return next();
     });
 });
 router.get("/:workdayId", auth, function (req, res, next) {
+    res.json(req.workday);
+});
+
+/* GET workday by date */
+router.param("date", function (req, res, next, dateString) {
+    // Check if date is correctly formatted
+    let dateRegex = /^(?:(?:31(-)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(-)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(-)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(-)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    if (!dateString.match(dateRegex))
+        return res.status(400).json({ message: "Please insert a valid date (format: DD-MM-YYYY)." });
+    // Create new date
+    let date = new Date(dateString.split("-")[2], dateString.split("-")[1], dateString.split("-")[0]);
+    let query = Workday.findOne({ date: date })
+        .populate("user")
+        .populate("busUnit")
+        .populate("activityUnit")
+        .populate("lunchUnit"); // TODO - nested populate
+    query.exec(function (err, workday) {
+        if (err) return next(err);
+        if (!workday) return next(new Error("No Workday found on date: " + date));
+        req.workday = workday;
+        return next();
+    });
+});
+router.get("/date/:date", auth, function (req, res, next) {
     res.json(req.workday);
 });
 
