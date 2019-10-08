@@ -9,10 +9,6 @@ let UserSchema = new mongoose.Schema({
     picture: {type: String}, // TODO - store img
     admin: {type: Boolean, default: false},
     birthday: {type: Date, required: true},
-    group: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group'
-    },
     absentDates: [{type: Date}],
     hash: String,
     salt: String,
