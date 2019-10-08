@@ -8,7 +8,7 @@ let jwt = require('express-jwt');
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET activities */
-router.get('/', function(req, res, next) {
+router.get('/', auth, function(req, res, next) {
     let query = Activity.find();
     query.exec(function(err, activities) {
         if (err) return next(err);
@@ -26,7 +26,7 @@ router.param("activityId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:activityId", function (req, res, next) {
+router.get("/:activityId", auth, function (req, res, next) {
     res.json(req.activity);
 });
 
@@ -57,7 +57,7 @@ router.patch("/:activityId", auth, function (req, res, next) {
 });
 
 /* GET activityUnits */
-router.get("/units/", function(req, res, next) {
+router.get("/units/", auth, function(req, res, next) {
     let query = ActivityUnit.find()
         .populate("activity")
         .populate("user");
@@ -68,7 +68,7 @@ router.get("/units/", function(req, res, next) {
 });
 
 /* GET activityUnit by id */
-router.param("activityUnitId", function (req, res, next, id) {
+router.param("activityUnitId", auth, function (req, res, next, id) {
     let query = ActivityUnit.findById(id)
         .populate("activity")
         .populate("user");
@@ -79,7 +79,7 @@ router.param("activityUnitId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:activityUnitId", function (req, res, next) {
+router.get("/units/:activityUnitId", auth, function (req, res, next) {
     res.json(req.activityUnit);
 });
 

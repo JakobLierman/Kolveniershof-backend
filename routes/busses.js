@@ -8,7 +8,7 @@ let jwt = require('express-jwt');
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET busses */
-router.get('/', function(req, res, next) {
+router.get('/', auth, function(req, res, next) {
     let query = Bus.find();
     query.exec(function(err, busses) {
         if (err) return next(err);
@@ -26,7 +26,7 @@ router.param("busId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:busId", function (req, res, next) {
+router.get("/:busId", auth, function (req, res, next) {
     res.json(req.bus);
 });
 
@@ -58,7 +58,7 @@ router.patch("/:busId", auth, function (req, res, next) {
 });
 
 /* GET busUnits */
-router.get("/units/", function(req, res, next) {
+router.get("/units/", auth, function(req, res, next) {
     let query = BusUnit.find()
         .populate("activity")
         .populate("user");
@@ -80,7 +80,7 @@ router.param("busUnitId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:busUnitId", function (req, res, next) {
+router.get("/units/:busUnitId", auth, function (req, res, next) {
     res.json(req.busUnit);
 });
 

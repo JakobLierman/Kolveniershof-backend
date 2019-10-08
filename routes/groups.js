@@ -7,7 +7,7 @@ let jwt = require('express-jwt');
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET groups */
-router.get('/', function(req, res, next) {
+router.get('/', auth, function(req, res, next) {
     let query = Group.find()
         .populate("user");
     query.exec(function(err, groups) {
@@ -27,7 +27,7 @@ router.param("groupId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:groupId", function (req, res, next) {
+router.get("/:groupId", auth, function (req, res, next) {
     res.json(req.group);
 });
 

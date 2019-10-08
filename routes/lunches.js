@@ -7,7 +7,7 @@ let jwt = require('express-jwt');
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET lunchUnits */
-router.get("/units/", function(req, res, next) {
+router.get("/units/", auth, function(req, res, next) {
     let query = LunchUnit.find()
         .populate("user");
     query.exec(function(err, lunchUnits) {
@@ -27,7 +27,7 @@ router.param("lunchUnitId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:lunchUnitId", function (req, res, next) {
+router.get("/units/:lunchUnitId", auth, function (req, res, next) {
     res.json(req.lunchUnit);
 });
 

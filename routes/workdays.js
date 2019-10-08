@@ -7,7 +7,7 @@ let jwt = require('express-jwt');
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET workdays */
-router.get('/', function(req, res, next) {
+router.get('/', auth, function(req, res, next) {
     let query = Workday.find()
         .populate("user")
         .populate("busUnit")
@@ -33,7 +33,7 @@ router.param("workdayId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:workdayId", function (req, res, next) {
+router.get("/:workdayId", auth, function (req, res, next) {
     res.json(req.workday);
 });
 
