@@ -54,8 +54,17 @@ router.delete("/units/:lunchUnitId", auth, function (req, res, next) {
 
 /* PATCH lunchUnit */
 router.patch("/units/:lunchUnitId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let lunchUnit = req.lunchUnit;
+    if (req.body.lunch)
+        lunchUnit.lunch = req.body.lunch;
+    if (req.body.mentors)
+        lunchUnit.mentors = req.body.mentors;
+    if (req.body.clients)
+        lunchUnit.clients = req.body.clients;
+    lunchUnit.save(function (err, lunchUnit) {
+        if (err) return next(err);
+        res.json(lunchUnit);
+    });
 });
 
 module.exports = router;

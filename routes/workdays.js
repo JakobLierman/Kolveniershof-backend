@@ -134,8 +134,25 @@ router.delete("/:workdayId", auth, function (req, res, next) {
 
 /* PATCH workday */
 router.patch("/:workdayId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let workday = req.workday;
+    if (req.body.date)
+        workday.date = req.body.date;
+    if (req.body.daycareMentors)
+        workday.daycareMentors = req.body.daycareMentors;
+    if (req.body.morningBusses)
+        workday.morningBusses = req.body.morningBusses;
+    if (req.body.amActivities)
+        workday.amActivities = req.body.amActivities;
+    if (req.body.lunch)
+        workday.lunch = req.body.lunch;
+    if (req.body.pmActivities)
+        workday.pmActivities = req.body.pmActivities;
+    if (req.body.holiday)
+        workday.holiday = req.body.holiday;
+    workday.save(function (err, workday) {
+        if (err) return next(err);
+        res.json(workday);
+    });
 });
 
 module.exports = router;

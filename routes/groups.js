@@ -53,8 +53,15 @@ router.delete("/:groupId", auth, function (req, res, next) {
 
 /* PATCH group */
 router.patch("/:groupId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let group = req.group;
+    if (req.body.name)
+        group.name = req.body.name;
+    if (req.body.members)
+        group.members = req.body.members;
+    group.save(function (err, group) {
+        if (err) return next(err);
+        res.json(group);
+    });
 });
 
 module.exports = router;

@@ -53,8 +53,17 @@ router.delete("/:busId", auth, function (req, res, next) {
 
 /* PATCH bus */
 router.patch("/:busId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let bus = req.body.bus;
+    if (req.body.name)
+        bus.name = req.body.name;
+    if (req.body.color)
+        bus.color = req.body.color;
+    if (req.body.icon)
+        bus.icon = req.body.icon;
+    bus.save(function (err, bus) {
+        if (err) return next(err);
+        res.json(bus);
+    });
 });
 
 /* GET busUnits */
@@ -105,8 +114,17 @@ router.delete("/units/:busUnitId", auth, function (req, res, next) {
 
 /* PATCH busUnit */
 router.patch("/units/:busUnitId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let busUnit = req.body.busUnit;
+    if (req.body.bus)
+        busUnit.bus = req.body.bus;
+    if (req.body.mentors)
+        busUnit.mentors = req.body.mentors;
+    if (req.body.clients)
+        busUnit.clients = req.body.clients;
+    busUnit.save(function (err, busUnit) {
+        if (err) return next(err);
+        res.json(busUnit);
+    });
 });
 
 module.exports = router;

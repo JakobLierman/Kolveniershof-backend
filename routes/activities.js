@@ -52,8 +52,15 @@ router.delete("/:activityId", auth, function (req, res, next) {
 
 /* PATCH activity */
 router.patch("/:activityId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let activity = req.body.activity;
+    if (req.body.name)
+        activity.name = req.body.name;
+    if (req.body.icon)
+        activity.icon = req.body.icon;
+    activity.save(function (err, activity) {
+        if (err) return next(err);
+        res.json(activity);
+    });
 });
 
 /* GET activityUnits */
@@ -104,8 +111,17 @@ router.delete("/units/:activityUnitId", auth, function (req, res, next) {
 
 /* PATCH activityUnit */
 router.patch("/units/:activityUnitId", auth, function (req, res, next) {
-    // TODO
-    res.send("not yet implemented");
+    let activityUnit = req.body.activityUnit;
+    if (req.body.activity)
+        activityUnit.activity = req.body.activity;
+    if (req.body.mentors)
+        activityUnit.mentors = req.body.mentors;
+    if (req.body.clients)
+        activityUnit.clients = req.body.clients;
+    activityUnit.save(function (err, activityUnit) {
+        if (err) return next(err);
+        res.json(activityUnit);
+    });
 });
 
 module.exports = router;
