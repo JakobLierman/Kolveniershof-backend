@@ -70,6 +70,11 @@ router.get("/date/:date", auth, function (req, res, next) {
 
 /* GET workday by date by user */
 router.get("/date/:date/:userId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) {
+        if (req.user._id !== req.params.userId) return res.status(401).end();
+    }
+
     let workday = req.workday;
     let clientWorkday = new Workday();
 
@@ -113,6 +118,9 @@ router.get("/date/:date/:userId", auth, function (req, res, next) {
 
 /* POST workday */
 router.post("/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let workday = new Workday({
         date: req.body.date,
         daycareMentors: req.body.daycareMentors,
@@ -130,6 +138,9 @@ router.post("/", auth, function (req, res, next) {
 
 /* DELETE workday */
 router.delete("/:workdayId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.workday.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -138,6 +149,9 @@ router.delete("/:workdayId", auth, function (req, res, next) {
 
 /* PATCH workday */
 router.patch("/:workdayId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let workday = req.workday;
     if (req.body.date)
         workday.date = req.body.date;

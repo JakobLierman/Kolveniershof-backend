@@ -33,6 +33,9 @@ router.get("/units/:lunchUnitId", auth, function (req, res, next) {
 
 /* POST lunchUnit */
 router.post("/units/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let lunchUnit = new LunchUnit({
         lunch: req.body.lunch,
         mentors: req.body.mentors,
@@ -46,6 +49,9 @@ router.post("/units/", auth, function (req, res, next) {
 
 /* DELETE lunchUnit */
 router.delete("/units/:lunchUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.lunchUnit.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -54,6 +60,9 @@ router.delete("/units/:lunchUnitId", auth, function (req, res, next) {
 
 /* PATCH lunchUnit */
 router.patch("/units/:lunchUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let lunchUnit = req.lunchUnit;
     if (req.body.lunch)
         lunchUnit.lunch = req.body.lunch;

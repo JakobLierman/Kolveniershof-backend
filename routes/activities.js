@@ -32,6 +32,9 @@ router.get("/:activityId", auth, function (req, res, next) {
 
 /* POST activity */
 router.post("/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let activity = new Activity({
         name: req.body.name,
         icon: req.body.icon
@@ -44,6 +47,9 @@ router.post("/", auth, function (req, res, next) {
 
 /* DELETE activity */
 router.delete("/:activityId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.activity.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -52,6 +58,9 @@ router.delete("/:activityId", auth, function (req, res, next) {
 
 /* PATCH activity */
 router.patch("/:activityId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let activity = req.body.activity;
     if (req.body.name)
         activity.name = req.body.name;
@@ -90,6 +99,9 @@ router.get("/units/:activityUnitId", auth, function (req, res, next) {
 
 /* POST activityUnit */
 router.post("/units/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let activityUnit = new ActivityUnit({
         activity: req.body.activity,
         mentors: req.body.mentors,
@@ -103,6 +115,9 @@ router.post("/units/", auth, function (req, res, next) {
 
 /* DELETE activityUnit */
 router.delete("/units/:activityUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.activityUnit.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -111,6 +126,9 @@ router.delete("/units/:activityUnitId", auth, function (req, res, next) {
 
 /* PATCH activityUnit */
 router.patch("/units/:activityUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let activityUnit = req.body.activityUnit;
     if (req.body.activity)
         activityUnit.activity = req.body.activity;
