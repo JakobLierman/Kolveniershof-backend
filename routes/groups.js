@@ -33,6 +33,9 @@ router.get("/:groupId", auth, function (req, res, next) {
 
 /* POST group */
 router.post("/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let group = new Group({
         name: req.body.name,
         members: req.body.members
@@ -45,6 +48,9 @@ router.post("/", auth, function (req, res, next) {
 
 /* DELETE group */
 router.delete("/:groupId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.group.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -53,6 +59,9 @@ router.delete("/:groupId", auth, function (req, res, next) {
 
 /* PATCH group */
 router.patch("/:groupId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let group = req.group;
     if (req.body.name)
         group.name = req.body.name;

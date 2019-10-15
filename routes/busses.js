@@ -32,6 +32,9 @@ router.get("/:busId", auth, function (req, res, next) {
 
 /* POST bus */
 router.post("/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let bus = new Bus({
         name: req.body.name,
         color: req.body.color,
@@ -45,6 +48,9 @@ router.post("/", auth, function (req, res, next) {
 
 /* DELETE bus */
 router.delete("/:busId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.bus.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -53,6 +59,9 @@ router.delete("/:busId", auth, function (req, res, next) {
 
 /* PATCH bus */
 router.patch("/:busId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let bus = req.body.bus;
     if (req.body.name)
         bus.name = req.body.name;
@@ -93,6 +102,9 @@ router.get("/units/:busUnitId", auth, function (req, res, next) {
 
 /* POST busUnit */
 router.post("/units/", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let busUnit = new BusUnit({
         bus: req.body.bus,
         mentors: req.body.mentors,
@@ -106,6 +118,9 @@ router.post("/units/", auth, function (req, res, next) {
 
 /* DELETE busUnit */
 router.delete("/units/:busUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     req.busUnit.remove(function (err) {
         if (err) return next(err);
         res.send(true);
@@ -114,6 +129,9 @@ router.delete("/units/:busUnitId", auth, function (req, res, next) {
 
 /* PATCH busUnit */
 router.patch("/units/:busUnitId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
     let busUnit = req.body.busUnit;
     if (req.body.bus)
         busUnit.bus = req.body.bus;
