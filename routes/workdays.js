@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let Workday = mongoose.model("Workday");
+let Comment = mongoose.model("Comment");
 let jwt = require('express-jwt');
 
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
@@ -14,7 +15,8 @@ router.get('/', auth, function(req, res, next) {
         .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
-        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] })
+        .populate("comments.client");
     query.exec(function(err, workdays) {
         if (err) return next(err);
         res.json(workdays);
@@ -29,7 +31,8 @@ router.param("workdayId", function (req, res, next, id) {
         .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
-        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] })
+        .populate("comments.client");
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found with id: " + id));
@@ -56,7 +59,8 @@ router.param("date", function (req, res, next, dateString) {
         .populate({ path: "amActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "pmActivities", populate: ['activity', 'mentors', 'clients'] })
         .populate({ path: "eveningBusses", populate: ['bus', 'mentors', 'clients'] })
-        .populate({ path: "lunch", populate: ['mentors', 'clients'] });
+        .populate({ path: "lunch", populate: ['mentors', 'clients'] })
+        .populate("comments.client");
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found on date: " + date));
@@ -112,6 +116,11 @@ router.get("/date/:date/:userId", auth, function (req, res, next) {
     });
     // Add holiday
     clientWorkday.holiday = workday.holiday;
+    // Add comment
+    for (let comment of workday.comments) {
+        if (comment.client._id.toString() === req.params.userId)
+            clientWorkday.comments.push(comment); break;
+    }
 
     res.json(clientWorkday);
 });
@@ -170,6 +179,80 @@ router.patch("/:workdayId", auth, function (req, res, next) {
     workday.save(function (err, workday) {
         if (err) return next(err);
         res.json(workday);
+    });
+});
+
+/* GET comments */
+router.get("/:workdayId/comments", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    res.json(req.workday.comments);
+});
+
+/* GET comment by id */
+router.param("commentId", function (req, res, next, id) {
+    for (let comment of req.workday.comments) {
+        if (comment._id.toString() === id)
+            req.comment = comment; return next();
+    }
+    return next(new Error("No comment found with id: " + id));
+});
+router.get("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) {
+        if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
+    }
+
+    res.json(req.comment);
+});
+
+/* POST comment */
+router.post("/:workdayId/comments", auth, function (req, res, next) {
+    let workday = req.workday;
+    let comment = new Comment({
+        comment: req.body.comment,
+        client: req.user._id
+    });
+    workday.comments.push(comment);
+    workday.save(function (err) {
+        if (err) return next(err);
+        res.json(comment);
+    });
+});
+
+/* DELETE comment */
+router.delete("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) {
+        if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
+    }
+
+    req.workday.comments.pull(req.params.commentId);
+    req.workday.save(function (err) {
+        if (err) return next(err);
+        res.send(true);
+    });
+});
+
+/* PATCH comment */
+router.patch("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) {
+        if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
+    }
+
+    req.workday.comments.pull(req.params.commentId);
+
+    let comment = req.comment;
+    if (req.body.comment)
+        comment.comment = req.body.comment;
+
+    req.workday.comments.push(comment);
+
+    req.workday.save(function (err) {
+        if (err) return next(err);
+        res.json(comment);
     });
 });
 

@@ -1,5 +1,16 @@
 let mongoose = require('mongoose');
 
+let CommentSchema = new mongoose.Schema({
+    comment: { type: String, required: true},
+    client: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+});
+
+mongoose.model('Comment', CommentSchema);
+
 let WorkdaySchema = new mongoose.Schema({
     date: { type: Date, required: true },
     daycareMentors: [{
@@ -26,7 +37,8 @@ let WorkdaySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BusUnit'
     }],
-    holiday: { type: Boolean, required: true, default: false }
+    holiday: { type: Boolean, required: true, default: false },
+    comments: [CommentSchema]
 });
 
 mongoose.model('Workday', WorkdaySchema);
