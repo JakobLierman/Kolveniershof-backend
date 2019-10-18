@@ -45,7 +45,7 @@ router.param("userName", function(req, res, next, userName) {
   });
 });
 
-router.get("/:email", function(req, res, next) {
+router.get("/:userName", function(req, res, next) {
   res.json(req.user);
 });
 
