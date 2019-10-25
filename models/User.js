@@ -7,6 +7,11 @@ let UserSchema = new mongoose.Schema({
     lastName: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     picture: {type: String},
+    address: {
+        street: String,
+        postalCode: String,
+        city: String
+    },
     admin: {type: Boolean, default: false},
     birthday: {type: Date, required: true},
     absentDates: [{type: Date}],

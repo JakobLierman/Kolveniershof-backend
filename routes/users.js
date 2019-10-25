@@ -86,6 +86,9 @@ router.post("/register", function(req, res, next) {
   user.firstName = req.body.firstName.trim();
   user.lastName = req.body.lastName.trim();
   user.picture = req.body.picture;
+  user.address.street = req.body.address.street;
+  user.address.postalCode = req.body.address.postalCode;
+  user.address.city = req.body.address.city;
   user.admin = req.body.admin;
   user.birthday = req.body.birthday;
 
@@ -125,6 +128,12 @@ router.patch("/id/:userId", auth, function(req, res, next) {
     user.email = req.body.email;
   if (req.body.picture)
     user.picture = req.body.picture;
+  if (req.body.address.street)
+    user.address.street = req.body.address.street;
+  if (req.body.address.postalCode)
+    user.address.postalCode = req.body.address.postalCode;
+  if (req.body.address.city)
+    user.address.city = req.body.address.city;
   if (req.body.admin)
     user.admin = req.body.admin;
   if (req.body.birthday)
