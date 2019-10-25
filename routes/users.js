@@ -12,7 +12,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 /* GET users listing. */
 router.get("/", function(req, res, next) {
   let query = User.find();
-  query.sort("userName");
+  query.sort("email");
   query.exec(function(err, users) {
     if (err) return next(err);
     res.json(users);
@@ -35,17 +35,17 @@ router.get("/id/:userId", function(req, res, next) {
 });
 
 /* GET user by email. */
-router.param("userName", function(req, res, next, userName) {
-  let query = User.find({ userName: userName });
+router.param("email", function(req, res, next, email) {
+  let query = User.find({ email: email });
   query.exec(function(err, user) {
     if (err) return next(err);
-    if (!user) return next(new Error("No user found with username '" + userName + "'."));
+    if (!user) return next(new Error("No user found with email '" + email + "'."));
     req.user = user;
     return next();
   });
 });
 
-router.get("/:userName", function(req, res, next) {
+router.get("/:email", function(req, res, next) {
   res.json(req.user);
 });
 
@@ -69,7 +69,7 @@ router.post("/isValidEmail", function(req, res, next) {
 router.post("/register", function(req, res, next) {
   // Check if all required fields are filled in
   if (
-    !req.body.userName ||
+    !req.body.email ||
     !req.body.password ||
     !req.body.firstName ||
     !req.body.lastName ||
@@ -81,7 +81,6 @@ router.post("/register", function(req, res, next) {
     return res.status(400).json({ msg: "Password is not strong enough." });
 
   let user = new User();
-  user.userName = req.body.userName.trim();
   user.email = req.body.email.trim().toLowerCase();
   user.setPassword(req.body.password);
   user.firstName = req.body.firstName.trim();
@@ -99,7 +98,7 @@ router.post("/register", function(req, res, next) {
 
 router.post("/login", function(req, res, next) {
   // Check if all fields are filled in
-  if (!req.body.userName || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     return res.status(400).json({ message: "Please fill out all fields." });
   }
   passport.authenticate("local", function(err, user, info) {
@@ -118,8 +117,6 @@ router.post("/login", function(req, res, next) {
 /* PATCH user */
 router.patch("/id/:userId", auth, function(req, res, next) {
   let user = req.user;
-  if (req.body.userName)
-    user.userName = req.body.userName;
   if (req.body.firstName)
     user.firstName = req.body.firstName;
   if (req.body.lastName)
