@@ -158,4 +158,17 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     });
 });
 
+/* Create week from template week */
+router.post("/createWeek/:week/:date", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // TODO - check if full week is present
+
+    // TODO - date regex
+    // TODO - find weekdays based on date
+
+    // TODO - copy items to dates
+});
+
 module.exports = router;
