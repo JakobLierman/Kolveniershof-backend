@@ -28,5 +28,7 @@ let WorkdayTemplateSchema = new mongoose.Schema({
         ref: 'BusUnit'
     }]
 });
+// Define unique compound index
+WorkdayTemplateSchema.index({ weekNumber: 1, dayNumber: 1}, { unique: true });
 
 mongoose.model('WorkdayTemplate', WorkdayTemplateSchema);
