@@ -164,10 +164,6 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    // Check if full week is present
-    if (WorkdayTemplate.find({week: req.params.weekToCopy}).count !== 5)
-        return res.status(409).json({ message: "Week does not contain all workDays yet." });
-
     // Add days to date, creates copy
     function addDays(date, days) {
         const copy = new Date(Number(date));
@@ -196,34 +192,49 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     let fridayDate = addDays(thursdayDate, 1);
     let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate];
 
-    let weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
-
-    // Copy template content, create new workDays
-    let resultJson = {};
-    dates.forEach(date => {
-        let template = null;
-        WorkdayTemplate.findOne({ week: req.params.weekToCopy, day: date.getDay() }).exec(function (err, workdayTemplate) {
-            if (err) return next(err);
-            template = workdayTemplate;
-        });
-        let workday = new Workday({
-            date: date,
-            originalWeekNumber: template.week,
-            daycareMentors: template.daycareMentors,
-            morningBusses: template.morningBusses,
-            amActivities: template.amActivities,
-            lunch: template.lunch,
-            pmActivities: template.pmActivities,
-            holiday: false
-        });
-        workday.save(function (err, workday) {
-            if (err) return next(err);
-            // Add workday to json
-            resultJson[weekdays.shift()] = workday;
-        });
+    // Check if full week is present
+    WorkdayTemplate.find({week: req.params.weekToCopy}).exec(function (err, items) {
+        if (err) return next(err);
+        if (items.length !== 5)
+            return res.status(409).json({ message: "Week does not contain all workday templates yet." });
+        else {
+            // Check if workday is present at given dates
+            Workday.find({ date: { $in: dates } }).exec(function (err, workdays) {
+                if (err) return next(err);
+                const daysPresent = [];
+                workdays.forEach(workday => { daysPresent.push(workday.date.toString().split(' ')[0]) });
+                console.log(daysPresent);
+                if (daysPresent.length > 0)
+                    return res.status(409).json({ message: "Workdays already present on " + daysPresent });
+                else {
+                    // Copy template content, create new workDays
+                    let resultJson = {};
+                    dates.forEach(date => {
+                        WorkdayTemplate.findOne({ week: req.params.weekToCopy, day: date.getDay() }).exec(function (err, template) {
+                            if (err) return next(err);
+                            // Create new workday
+                            let workday = new Workday({
+                                date: date,
+                                originalWeekNumber: template.week,
+                                daycareMentors: template.daycareMentors,
+                                morningBusses: template.morningBusses,
+                                amActivities: template.amActivities,
+                                lunch: template.lunch,
+                                pmActivities: template.pmActivities,
+                                holiday: false
+                            });
+                            workday.save(function (err, workday) {
+                                if (err) return next(err);
+                                // Add workday to json
+                                resultJson[date.toString().split(' ')[0]] = workday;
+                            });
+                        });
+                    });
+                    res.json(resultJson);
+                }
+            });
+        }
     });
-
-    res.json(resultJson);
 });
 
 module.exports = router;
