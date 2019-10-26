@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let WorkdayTemplate = mongoose.model("WorkdayTemplate");
+let Workday = mongoose.model("Workday");
 let jwt = require('express-jwt');
 
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
@@ -163,8 +164,6 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-
-    // TODO - copy items to dates
     // Check if full week is present
     if (WorkdayTemplate.find({week: req.params.weekToCopy}).count !== 5)
         return res.status(409).json({ message: "Week does not contain all workDays yet." });
@@ -198,6 +197,33 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate];
 
     let weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+    // Copy template content, create new workDays
+    let resultJson = {};
+    dates.forEach(date => {
+        let template = null;
+        WorkdayTemplate.findOne({ week: req.params.weekToCopy, day: date.getDay() }).exec(function (err, workdayTemplate) {
+            if (err) return next(err);
+            template = workdayTemplate;
+        });
+        let workday = new Workday({
+            date: date,
+            originalWeekNumber: template.week,
+            daycareMentors: template.daycareMentors,
+            morningBusses: template.morningBusses,
+            amActivities: template.amActivities,
+            lunch: template.lunch,
+            pmActivities: template.pmActivities,
+            holiday: false
+        });
+        workday.save(function (err, workday) {
+            if (err) return next(err);
+            // Add workday to json
+            resultJson[weekdays.shift()] = workday;
+        });
+    });
+
+    res.json(resultJson);
 });
 
 module.exports = router;
