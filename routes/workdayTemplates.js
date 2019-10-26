@@ -164,13 +164,40 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     if (!req.user.admin) return res.status(401).end();
 
 
-    // TODO - date regex
-    // TODO - find weekdays based on date
-
     // TODO - copy items to dates
     // Check if full week is present
     if (WorkdayTemplate.find({week: req.params.weekToCopy}).count !== 5)
         return res.status(409).json({ message: "Week does not contain all workDays yet." });
+
+    // Add days to date, creates copy
+    function addDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() + days);
+        return copy;
+    }
+    // Subtract days from date, creates copy
+    function subtractDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() - days);
+        return copy;
+    }
+
+    let dateString = req.params.date;
+    // Check if date is correctly formatted
+    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    if (!dateString.match(dateRegex))
+        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+    // Create new date
+    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate];
+
+    let weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 });
 
 module.exports = router;
