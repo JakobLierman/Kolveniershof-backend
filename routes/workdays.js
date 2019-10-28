@@ -40,7 +40,7 @@ router.param("workdayId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:workdayId", auth, function (req, res, next) {
+router.get("/id/:workdayId", auth, function (req, res, next) {
     res.json(req.workday);
 });
 
@@ -146,7 +146,7 @@ router.post("/", auth, function (req, res, next) {
 });
 
 /* DELETE workday */
-router.delete("/:workdayId", auth, function (req, res, next) {
+router.delete("/id/:workdayId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -157,7 +157,7 @@ router.delete("/:workdayId", auth, function (req, res, next) {
 });
 
 /* PATCH workday */
-router.patch("/:workdayId", auth, function (req, res, next) {
+router.patch("/id/:workdayId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -183,7 +183,7 @@ router.patch("/:workdayId", auth, function (req, res, next) {
 });
 
 /* GET comments */
-router.get("/:workdayId/comments", auth, function (req, res, next) {
+router.get("/id/:workdayId/comments", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -198,7 +198,7 @@ router.param("commentId", function (req, res, next, id) {
     }
     return next(new Error("No comment found with id: " + id));
 });
-router.get("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+router.get("/id/:workdayId/comments/:commentId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) {
         if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
@@ -208,7 +208,7 @@ router.get("/:workdayId/comments/:commentId", auth, function (req, res, next) {
 });
 
 /* POST comment */
-router.post("/:workdayId/comments", auth, function (req, res, next) {
+router.post("/id/:workdayId/comments", auth, function (req, res, next) {
     let workday = req.workday;
     let comment = new Comment({
         comment: req.body.comment,
@@ -222,7 +222,7 @@ router.post("/:workdayId/comments", auth, function (req, res, next) {
 });
 
 /* DELETE comment */
-router.delete("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+router.delete("/id/:workdayId/comments/:commentId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) {
         if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
@@ -236,7 +236,7 @@ router.delete("/:workdayId/comments/:commentId", auth, function (req, res, next)
 });
 
 /* PATCH comment */
-router.patch("/:workdayId/comments/:commentId", auth, function (req, res, next) {
+router.patch("/id/:workdayId/comments/:commentId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) {
         if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
