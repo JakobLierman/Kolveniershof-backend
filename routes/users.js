@@ -11,7 +11,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
-  let query = User.find();
+  let query = User.find(null, '-salt -hash');
   query.sort("email");
   query.exec(function(err, users) {
     if (err) return next(err);
@@ -21,7 +21,7 @@ router.get("/", function(req, res, next) {
 
 /* GET user by id. */
 router.param("userId", function(req, res, next, id) {
-  let query = User.findById(id);
+  let query = User.findById(id, '-salt -hash');
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("not found " + id));
@@ -29,14 +29,13 @@ router.param("userId", function(req, res, next, id) {
     return next();
   });
 });
-
 router.get("/id/:userId", function(req, res, next) {
   res.json(req.user);
 });
 
 /* GET user by email. */
 router.param("email", function(req, res, next, email) {
-  let query = User.find({ email: email });
+  let query = User.findOne({ email: email }, '-salt -hash');
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("No user found with email '" + email + "'."));
@@ -44,7 +43,6 @@ router.param("email", function(req, res, next, email) {
     return next();
   });
 });
-
 router.get("/:email", function(req, res, next) {
   res.json(req.user);
 });
