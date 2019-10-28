@@ -9,7 +9,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 /* GET lunchUnits */
 router.get("/units/", auth, function(req, res, next) {
     let query = LunchUnit.find()
-        .populate(['mentors', 'clients']);
+        .populate([{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function(err, lunchUnits) {
         if (err) return next(err);
         res.json(lunchUnits);
@@ -19,7 +19,7 @@ router.get("/units/", auth, function(req, res, next) {
 /* GET lunchUnit by id */
 router.param("lunchUnitId", function (req, res, next, id) {
     let query = LunchUnit.findById(id)
-        .populate(['mentors', 'clients']);
+        .populate([{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function (err, lunchUnit) {
         if (err) return next(err);
         if (!lunchUnit) return next(new Error("not found " + id));
