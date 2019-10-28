@@ -27,7 +27,7 @@ router.param("groupId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:groupId", auth, function (req, res, next) {
+router.get("/id/:groupId", auth, function (req, res, next) {
     res.json(req.group);
 });
 
@@ -47,7 +47,7 @@ router.post("/", auth, function (req, res, next) {
 });
 
 /* DELETE group */
-router.delete("/:groupId", auth, function (req, res, next) {
+router.delete("/id/:groupId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -58,7 +58,7 @@ router.delete("/:groupId", auth, function (req, res, next) {
 });
 
 /* PATCH group */
-router.patch("/:groupId", auth, function (req, res, next) {
+router.patch("/id/:groupId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

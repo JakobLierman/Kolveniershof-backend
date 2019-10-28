@@ -26,7 +26,7 @@ router.param("activityId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:activityId", auth, function (req, res, next) {
+router.get("/id/:activityId", auth, function (req, res, next) {
     res.json(req.activity);
 });
 
@@ -46,7 +46,7 @@ router.post("/", auth, function (req, res, next) {
 });
 
 /* DELETE activity */
-router.delete("/:activityId", auth, function (req, res, next) {
+router.delete("/id/:activityId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -57,7 +57,7 @@ router.delete("/:activityId", auth, function (req, res, next) {
 });
 
 /* PATCH activity */
-router.patch("/:activityId", auth, function (req, res, next) {
+router.patch("/id/:activityId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

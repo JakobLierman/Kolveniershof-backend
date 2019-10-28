@@ -26,7 +26,7 @@ router.param("busId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/:busId", auth, function (req, res, next) {
+router.get("/id/:busId", auth, function (req, res, next) {
     res.json(req.bus);
 });
 
@@ -47,7 +47,7 @@ router.post("/", auth, function (req, res, next) {
 });
 
 /* DELETE bus */
-router.delete("/:busId", auth, function (req, res, next) {
+router.delete("/id/:busId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -58,7 +58,7 @@ router.delete("/:busId", auth, function (req, res, next) {
 });
 
 /* PATCH bus */
-router.patch("/:busId", auth, function (req, res, next) {
+router.patch("/id/:busId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
