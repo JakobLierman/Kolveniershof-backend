@@ -75,7 +75,7 @@ router.patch("/id/:activityId", auth, function (req, res, next) {
 /* GET activityUnits */
 router.get("/units/", auth, function(req, res, next) {
     let query = ActivityUnit.find()
-        .populate(['activity', 'mentors', 'clients']);
+        .populate(['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function(err, activityUnits) {
         if (err) return next(err);
         res.json(activityUnits);
@@ -85,7 +85,7 @@ router.get("/units/", auth, function(req, res, next) {
 /* GET activityUnit by id */
 router.param("activityUnitId", auth, function (req, res, next, id) {
     let query = ActivityUnit.findById(id)
-        .populate(['activity', 'mentors', 'clients']);
+        .populate(['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function (err, activityUnit) {
         if (err) return next(err);
         if (!activityUnit) return next(new Error("not found " + id));
