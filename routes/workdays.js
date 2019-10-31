@@ -132,6 +132,7 @@ router.post("/", auth, function (req, res, next) {
 
     let workday = new Workday({
         date: req.body.date,
+        originalWeekNumber: req.body.originalWeekNumber,
         daycareMentors: req.body.daycareMentors,
         morningBusses: req.body.morningBusses,
         amActivities: req.body.amActivities,
