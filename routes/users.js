@@ -25,12 +25,12 @@ router.param("userId", function(req, res, next, id) {
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("not found " + id));
-    req.user = user;
+    req.receivedUser = user;
     return next();
   });
 });
 router.get("/id/:userId", function(req, res, next) {
-  res.json(req.user);
+  res.json(req.receivedUser);
 });
 
 /* GET user by email. */
@@ -39,12 +39,12 @@ router.param("email", function(req, res, next, email) {
   query.exec(function(err, user) {
     if (err) return next(err);
     if (!user) return next(new Error("No user found with email '" + email + "'."));
-    req.user = user;
+    req.receivedUser = user;
     return next();
   });
 });
 router.get("/:email", function(req, res, next) {
-  res.json(req.user);
+  res.json(req.receivedUser);
 });
 
 /* REGISTER / LOGIN functionality */
@@ -117,7 +117,7 @@ router.post("/login", function(req, res, next) {
 
 /* PATCH user */
 router.patch("/id/:userId", auth, function(req, res, next) {
-  let user = req.user;
+  let user = req.receivedUser;
   if (req.body.firstName)
     user.firstName = req.body.firstName;
   if (req.body.lastName)
@@ -136,6 +136,31 @@ router.patch("/id/:userId", auth, function(req, res, next) {
     user.admin = req.body.admin;
   if (req.body.birthday)
     user.birthday = req.body.birthday;
+  if (req.body.absentDates)
+    user.absentDates = req.body.absentDates;
+  user.save(function(err) {
+    if (err) return next(err);
+    return res.json(user);
+  });
+});
+
+/* POST add absent date */
+router.post("/addAbsentDate/:userId", auth, function(req, res, next) {
+  // Check permissions
+  // TODO
+
+  if (!req.body.date)
+    return res.status(400).json({ message: "Please fill out all fields." });
+
+  let user = req.receivedUser;
+  if (!user.absentDates)
+    user.absentDates = [];
+  else {
+    if (user.absentDates.indexOf(new Date(req.body.date)) !== -1)
+      return res.status(400).json({ message: "Date already present." });
+  }
+  user.absentDates.push(new Date(req.body.date));
+
   user.save(function(err) {
     if (err) return next(err);
     return res.json(user);
