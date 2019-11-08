@@ -221,6 +221,7 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
                                 amActivities: template.amActivities,
                                 lunch: template.lunch,
                                 pmActivities: template.pmActivities,
+                                eveningBusses: template.eveningBusses,
                                 holiday: false
                             });
                             workday.save(function (err, workday) {
