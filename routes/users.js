@@ -84,9 +84,11 @@ router.post("/register", function(req, res, next) {
   user.firstName = req.body.firstName.trim();
   user.lastName = req.body.lastName.trim();
   user.picture = req.body.picture;
-  user.address.street = req.body.address.street;
-  user.address.postalCode = req.body.address.postalCode;
-  user.address.city = req.body.address.city;
+  if (req.body.address) {
+    user.address.street = req.body.address.street;
+    user.address.postalCode = req.body.address.postalCode;
+    user.address.city = req.body.address.city;
+  }
   user.admin = req.body.admin;
   user.birthday = req.body.birthday;
 
