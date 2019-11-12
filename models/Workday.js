@@ -12,7 +12,7 @@ let CommentSchema = new mongoose.Schema({
 mongoose.model('Comment', CommentSchema);
 
 let WorkdaySchema = new mongoose.Schema({
-    date: { type: Date, required: true },
+    date: { type: Date, required: true, unique: true },
     originalWeekNumber: { type: Number, required: true, min: 1, max: 4 },
     daycareMentors: [{
         type: mongoose.Schema.Types.ObjectId,

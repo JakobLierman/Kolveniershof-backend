@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let WorkdayTemplate = mongoose.model("WorkdayTemplate");
+let Workday = mongoose.model("Workday");
 let jwt = require('express-jwt');
 
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
@@ -158,6 +159,102 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
         res.json(workdayTemplate);
+    });
+});
+
+/* Create week from template week */
+router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Add days to date, creates copy
+    function addDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() + days);
+        return copy;
+    }
+    // Subtract days from date, creates copy
+    function subtractDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() - days);
+        return copy;
+    }
+
+    let dateString = req.params.date;
+    // Check if date is correctly formatted
+    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    if (!dateString.match(dateRegex))
+        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+    // Create new date
+    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let saturdayDate = addDays(fridayDate, 1);
+    let sundayDate = addDays(saturdayDate, 1);
+    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
+
+    // Check if full week is present
+    WorkdayTemplate.find({week: req.params.weekToCopy}).exec(function (err, items) {
+        if (err) return next(err);
+        if (items.length !== 5)
+            return res.status(409).json({ message: "Week does not contain all workday templates yet." });
+        else {
+            // Check if workday is present at given dates
+            Workday.find({ date: { $in: dates } }).exec(function (err, workdays) {
+                if (err) return next(err);
+                const daysPresent = [];
+                workdays.forEach(workday => { daysPresent.push(workday.date.toString().split(' ')[0]) });
+                console.log(daysPresent);
+                if (daysPresent.length > 0)
+                    return res.status(409).json({ message: "Workdays already present on " + daysPresent });
+                else {
+                    // Copy template content, create new workDays
+                    let resultJson = {};
+                    dates.forEach(date => {
+                        if (date.getDay() > 5) {
+                            let workday = new Workday({
+                                date: date,
+                                originalWeekNumber: req.params.weekToCopy
+                            });
+                            workday.save(function (err, workday) {
+                                if (err) return next(err);
+                                // Add workday to json
+                                resultJson[date.toString().split(' ')[0]] = workday;
+                            });
+                        } else {
+                            WorkdayTemplate.findOne({
+                                week: req.params.weekToCopy,
+                                day: date.getDay()
+                            }).exec(function (err, template) {
+                                if (err) return next(err);
+                                // Create new workday
+                                let workday = new Workday({
+                                    date: date,
+                                    originalWeekNumber: template.week,
+                                    daycareMentors: template.daycareMentors,
+                                    morningBusses: template.morningBusses,
+                                    amActivities: template.amActivities,
+                                    lunch: template.lunch,
+                                    pmActivities: template.pmActivities,
+                                    eveningBusses: template.eveningBusses,
+                                    holiday: false
+                                });
+                                workday.save(function (err, workday) {
+                                    if (err) return next(err);
+                                    // Add workday to json
+                                    resultJson[date.toString().split(' ')[0]] = workday;
+                                });
+                            });
+                        }
+                    });
+                    res.json(resultJson);
+                }
+            });
+        }
     });
 });
 
