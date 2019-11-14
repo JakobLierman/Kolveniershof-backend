@@ -696,7 +696,7 @@ db.workdaytemplates.insertMany([
 
 // Workdays
 db.workdays.insertMany([
-    { date: new Date("2019-11-04"), originalWeekNumber: 1, 
+    { date: new Date("2019-10-28"), originalWeekNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -713,7 +713,7 @@ db.workdays.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { date: new Date("2019-11-05"), originalWeekNumber: 1, 
+    { date: new Date("2019-10-29"), originalWeekNumber: 1, 
         daycareMentors: [
             db.users.findOne({ email: "mentor4@gmail.com" })._id,
             db.users.findOne({ email: "mentor5@gmail.com" })._id
@@ -735,7 +735,7 @@ db.workdays.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { date: new Date("2019-11-06"), originalWeekNumber: 1, 
+    { date: new Date("2019-10-30"), originalWeekNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -754,7 +754,7 @@ db.workdays.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { date: new Date("2019-11-07"), originalWeekNumber: 1, 
+    { date: new Date("2019-10-31"), originalWeekNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -771,28 +771,27 @@ db.workdays.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { date: new Date("2019-11-08"), originalWeekNumber: 1, 
+    { date: new Date("2019-11-01"), originalWeekNumber: 1, 
+        holiday: true
+    },
+    { date: new Date("2019-11-02"), originalWeekNumber: 1 },
+    { date: new Date("2019-11-03"), originalWeekNumber: 1 },
+    { date: new Date("2019-11-04"), originalWeekNumber: 2, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
-            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ], 
         amActivities: [
-            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Weekschema" })._id })._id,
         ],
-        lunch: db.lunchunits.findOne({ lunch: "Worst met aardappelen en doperwten" })._id,
+        lunch: db.lunchunits.findOne({ lunch: "Kip met rijst en ananas" })._id,
         pmActivities: [
-            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Sfeergroep" })._id })._id
         ],
         eveningBusses: [
-            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { date: new Date("2019-11-09"), originalWeekNumber: 1 },
-    { date: new Date("2019-11-1O"), originalWeekNumber: 1 },
-    { date: new Date("2019-11-11"), originalWeekNumber: 2, 
-        holiday: true },
-    { date: new Date("2019-11-12"), originalWeekNumber: 2, 
+    { date: new Date("2019-11-05"), originalWeekNumber: 2, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
@@ -808,3 +807,583 @@ db.workdays.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] }
 ])
+
+
+// DEMO DATA
+db.activities.insertMany([
+    { name: "Clb", icon:""},
+    { name: "Rozenberg", icon:""}
+    ]
+)
+// LunchUnits
+db.lunchunits.insertMany([
+    { lunch: "Spaghetti bolognese", 
+        mentors: [
+            db.users.findOne({ email: "demoadmin1@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin2@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin3@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin5@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin6@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin7@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin8@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin9@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin10@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient17@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient19@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient31@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id,
+            db.users.findOne({ email: "democlient33@gmail.com" })._id,
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id,
+            db.users.findOne({ email: "democlient39@gmail.com" })._id
+        ] },
+     { lunch: "Fishsticks met purree en spinazie",
+         mentors: [
+            db.users.findOne({ email: "demoadmin16@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin17@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin8@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin12@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin9@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin14@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin5@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin11@gmail.com" })._id
+         ],
+         clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient3@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id,
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient7@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id,
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id
+         ] } 
+    ])
+
+// ActivityUnits
+db.activityunits.insertMany([
+    { activity: db.activities.findOne({ name: "Koken" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin5@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient17@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient19@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Digitaal atelier" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin6@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin2@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient4@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Crea" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin7@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin1@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient31@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id,
+            db.users.findOne({ email: "democlient33@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Winkelen" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin8@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin3@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id,
+            db.users.findOne({ email: "democlient39@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Spik en span" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin11@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin1@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Beleving" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin10@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin3@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient33@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Sporten" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin7@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin6@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient17@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient19@gmail.com" })._id,
+            db.users.findOne({ email: "democlient31@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Kaarsenatelier" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin9@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id,
+            db.users.findOne({ email: "democlient39@gmail.com" })._id
+        ] },
+        //DAY 2
+    { activity: db.activities.findOne({ name: "Koken" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin16@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient3@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Clb" })._id,  
+        mentors: [
+            db.users.findOne({ email: "demoadmin17@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Provenciaal domein" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin8@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin12@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient7@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Kaarsenatelier" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin9@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin14@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Keuken afwas" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin11@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Wandelen" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin17@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin9@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin13@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient3@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient7@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Crea" })._id, 
+        mentors: [
+            db.users.findOne({ email: "demoadmin17@gmail.com" })._id
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id
+        ] },
+    { activity: db.activities.findOne({ name: "Rozenberg" })._id,  
+        mentors: [
+            db.users.findOne({ email: "demoadmin5@gmail.com" })._id,
+            db.users.findOne({ email: "demoadmin14@gmail.com" })._id
+            
+        ], 
+        clients: [
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id
+        ] },
+])
+
+// AbsentDates
+// TODO - clear all absentDates
+db.users.updateMany( {}, { $set: { absentDates: []} } )
+db.users.updateMany(
+    { email: {$in : [
+    "democlient2@gmail.com", "democlient3@gmail.com", "democlient5@gmail.com",
+    "democlient6@gmail.com", "democlient7@gmail.com", "democlient9@gmail.com",
+    "democlient10@gmail.com", "democlient11@gmail.com", "democlient12@gmail.com",
+    "democlient13@gmail.com", "demoadmin4@gmail.com"]}},
+    { $push: { absentDates: new Date("2019-11-12") } }
+)
+
+db.users.updateMany(
+    { email: {$in : [
+    "democlient2@gmail.com", "democlient4@gmail.com", "democlient11@gmail.com",
+    "democlient17@gmail.com", "democlient39@gmail.com", "democlient5@gmail.com",
+    "democlient31@gmail.com", "democlient6@gmail.com", "democlient33@gmail.com",
+    "democlient9@gmail.com", "democlient1@gmail.com", "democlient10@gmail.com",
+    "democlient12@gmail.com", "democlient19@gmail.com", "democlient13@gmail.com",
+    "demoadmin15@gmail.com"]}},
+    { $push: { absentDates: new Date("2019-11-13") } }
+)
+
+
+
+
+// Workdays
+db.workdays.insertMany([
+    { date: new Date("2019-11-12"), originalWeekNumber: 3, 
+            amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Koken"})._id,
+                clients: [
+                    db.users.findOne({ email: "democlient14@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient15@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient16@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient17@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient18@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient19@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient20@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient21@gmail.com" })._id
+                ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Digitaal atelier"})._id,
+                clients: [
+                    db.users.findOne({ email: "democlient4@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient23@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient24@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient25@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient26@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient27@gmail.com" })._id
+                ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Crea"})._id,
+                clients: [
+                    db.users.findOne({ email: "democlient28@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient29@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient30@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient31@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient8@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient32@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient33@gmail.com" })._id
+                ] 
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Winkelen"})._id,
+                clients: [
+                    db.users.findOne({ email: "democlient34@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient35@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient36@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient37@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient38@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient39@gmail.com" })._id
+                ]
+            })._id,
+        ],
+        lunch: db.lunchunits.findOne({ 
+            lunch: "Spaghetti bolognese", 
+            clients: [
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient17@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient19@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient31@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id,
+            db.users.findOne({ email: "democlient33@gmail.com" })._id,
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id,
+            db.users.findOne({ email: "democlient39@gmail.com" })._id
+            ]
+        })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                 name: "Spik en span"})._id, 
+                 clients: [
+                    db.users.findOne({ email: "democlient34@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient24@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient27@gmail.com" })._id
+                ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Beleving"})._id,
+                clients: [
+                    db.users.findOne({ email: "democlient14@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient36@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient30@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient33@gmail.com" })._id
+                ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Sporten"})._id, 
+                clients: [
+                    db.users.findOne({ email: "democlient28@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient16@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient23@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient17@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient29@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient18@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient19@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient31@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient21@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient25@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient37@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient38@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient20@gmail.com" })._id
+                ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Kaarsenatelier"})._id, 
+                clients: [
+                    db.users.findOne({ email: "democlient15@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient35@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient22@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient26@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient32@gmail.com" })._id,
+                    db.users.findOne({ email: "democlient39@gmail.com" })._id
+                ]
+            })._id,
+        ] },
+     { date: new Date("2019-11-13"), originalWeekNumber: 3, 
+            amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Koken"})._id,
+                clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient3@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id
+        ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Clb"})._id,
+                clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id
+        ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Provenciaal domein"})._id,
+                clients: [
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id,
+            db.users.findOne({ email: "democlient7@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id
+        ] 
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Kaarsenatelier"})._id,
+                clients: [
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id
+        ]
+            })._id,
+        ],
+        lunch: db.lunchunits.findOne({ 
+            lunch: "Fishsticks met purree en spinazie", 
+            clients: [
+                db.users.findOne({ email: "democlient28@gmail.com" })._id,
+                db.users.findOne({ email: "democlient3@gmail.com" })._id,
+                db.users.findOne({ email: "democlient16@gmail.com" })._id,
+                db.users.findOne({ email: "democlient29@gmail.com" })._id,
+                db.users.findOne({ email: "democlient30@gmail.com" })._id,
+                db.users.findOne({ email: "democlient32@gmail.com" })._id,
+                db.users.findOne({ email: "democlient14@gmail.com" })._id,
+                db.users.findOne({ email: "democlient36@gmail.com" })._id,
+                db.users.findOne({ email: "democlient22@gmail.com" })._id,
+                db.users.findOne({ email: "democlient26@gmail.com" })._id,
+                db.users.findOne({ email: "democlient38@gmail.com" })._id,
+                db.users.findOne({ email: "democlient27@gmail.com" })._id,
+                db.users.findOne({ email: "democlient23@gmail.com" })._id,
+                db.users.findOne({ email: "democlient18@gmail.com" })._id,
+                db.users.findOne({ email: "democlient21@gmail.com" })._id,
+                db.users.findOne({ email: "democlient7@gmail.com" })._id,
+                db.users.findOne({ email: "democlient8@gmail.com" })._id,
+                db.users.findOne({ email: "democlient34@gmail.com" })._id,
+                db.users.findOne({ email: "democlient15@gmail.com" })._id,
+                db.users.findOne({ email: "democlient35@gmail.com" })._id,
+                db.users.findOne({ email: "democlient24@gmail.com" })._id,
+                db.users.findOne({ email: "democlient30@gmail.com" })._id,
+                db.users.findOne({ email: "democlient25@gmail.com" })._id
+             ]
+        })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                 name: "Keuken afwas"})._id, 
+                 clients: [
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient21@gmail.com" })._id
+        ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Wandelen"})._id,
+                clients: [
+            db.users.findOne({ email: "democlient14@gmail.com" })._id,
+            db.users.findOne({ email: "democlient34@gmail.com" })._id,
+            db.users.findOne({ email: "democlient3@gmail.com" })._id,
+            db.users.findOne({ email: "democlient15@gmail.com" })._id,
+            db.users.findOne({ email: "democlient35@gmail.com" })._id,
+            db.users.findOne({ email: "democlient16@gmail.com" })._id,
+            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient29@gmail.com" })._id,
+            db.users.findOne({ email: "democlient30@gmail.com" })._id,
+            db.users.findOne({ email: "democlient7@gmail.com" })._id,
+            db.users.findOne({ email: "democlient20@gmail.com" })._id
+        ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({
+                name: "Crea"})._id, 
+                clients: [
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient18@gmail.com" })._id,
+            db.users.findOne({ email: "democlient8@gmail.com" })._id,
+            db.users.findOne({ email: "democlient25@gmail.com" })._id,
+            db.users.findOne({ email: "democlient38@gmail.com" })._id
+        ]
+            })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ 
+                name: "Rozenberg"})._id, 
+                clients: [
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient23@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient37@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
+            db.users.findOne({ email: "democlient32@gmail.com" })._id
+        ]
+            })._id,
+        ] }
+    ])
+    
+
+
