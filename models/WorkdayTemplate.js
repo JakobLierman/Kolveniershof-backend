@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 
 let WorkdayTemplateSchema = new mongoose.Schema({
+    templateName: { type: String, required: true },
     weekNumber: { type: Number, required: true, min: 1, max: 4 },
     dayNumber: { type: Number, required: true, min: 1, max: 5 },
     daycareMentors: [{
@@ -29,6 +30,6 @@ let WorkdayTemplateSchema = new mongoose.Schema({
     }]
 });
 // Define unique compound index
-WorkdayTemplateSchema.index({ weekNumber: 1, dayNumber: 1}, { unique: true });
+WorkdayTemplateSchema.index({ templateName: 1, weekNumber: 1, dayNumber: 1 }, { unique: true });
 
 mongoose.model('WorkdayTemplate', WorkdayTemplateSchema);
