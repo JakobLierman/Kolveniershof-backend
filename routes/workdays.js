@@ -25,14 +25,8 @@ router.get('/', auth, function(req, res, next) {
 
 /* GET workday by id */
 router.param("workdayId", function (req, res, next, id) {
-    let query = Workday.findById(id)
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate("comments.client");
+    let query = Workday.findById(id);
+    populateWorkdays(query);
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found with id: " + id));
@@ -53,14 +47,8 @@ router.param("date", function (req, res, next, dateString) {
     // Create new date
     let date = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
 
-    let query = Workday.findOne({ date: date })
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate("comments.client");
+    let query = Workday.findOne({ date: date });
+    populateWorkdays(query);
     query.exec(function (err, workday) {
         if (err) return next(err);
         if (!workday) return next(new Error("No Workday found on date: " + date));
@@ -255,5 +243,17 @@ router.patch("/id/:workdayId/comments/:commentId", auth, function (req, res, nex
         res.json(comment);
     });
 });
+
+// Populate query
+function populateWorkdays(query) {
+    query
+        .populate({ path: "daycareMentors", select: '-salt -hash' })
+        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "comments.client", select: '-salt -hash' });
+}
 
 module.exports = router;

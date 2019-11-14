@@ -12,13 +12,8 @@ router.get('/', auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let query = WorkdayTemplate.find()
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.find();
+    populateWorkdayTemplates(query);
     query.exec(function(err, workdayTemplates) {
         if (err) return next(err);
         res.json(workdayTemplates);
@@ -27,13 +22,8 @@ router.get('/', auth, function (req, res, next) {
 
 /* GET workday template by id */
 router.param("workdayTemplateId", function (req, res, next, id) {
-    let query = WorkdayTemplate.findById(id)
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.findById(id);
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplate) {
         if (err) return next(err);
         if (!workdayTemplate) return next(new Error("No WorkdayTemplate found with id: " + id));
@@ -54,13 +44,8 @@ router.param("week", function (req, res, next, week) {
     if(!week.match(weekRegex))
         return res.status(400).json({ message: "Please insert a valid week number (1, 2, 3 or 4)." });
 
-    let query = WorkdayTemplate.find({ weekNumber: week })
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.find({ weekNumber: week });
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
         if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
@@ -81,13 +66,8 @@ router.param("day", function (req, res, next, day) {
     if(!day.match(dayRegex))
         return res.status(400).json({ message: "Please insert a valid day number (1, 2, 3, 4 or 5)." });
 
-    let query = WorkdayTemplate.findOne({ dayNumber: day })
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.findOne({ dayNumber: day });
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplate) {
         if (err) return next(err);
         if (!workdayTemplate) return next(new Error("No WorkdayTemplate found on day: " + day));
@@ -257,5 +237,16 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
         }
     });
 });
+
+// Populate query
+function populateWorkdayTemplates(query) {
+    query
+        .populate({ path: "daycareMentors", select: '-salt -hash' })
+        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+}
 
 module.exports = router;
