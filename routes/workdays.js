@@ -132,6 +132,7 @@ router.post("/", auth, function (req, res, next) {
 
     let workday = new Workday({
         date: req.body.date,
+        originalTemplateName: req.body.originalTemplateName,
         originalWeekNumber: req.body.originalWeekNumber,
         daycareMentors: req.body.daycareMentors,
         morningBusses: req.body.morningBusses,
@@ -163,8 +164,6 @@ router.patch("/id/:workdayId", auth, function (req, res, next) {
     if (!req.user.admin) return res.status(401).end();
 
     let workday = req.workday;
-    if (req.body.date)
-        workday.date = req.body.date;
     if (req.body.daycareMentors)
         workday.daycareMentors = req.body.daycareMentors;
     if (req.body.morningBusses)
