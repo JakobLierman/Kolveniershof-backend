@@ -1916,7 +1916,7 @@ db.workdays.insertMany([
             db.users.findOne({ email: "democlient18@gmail.com" })._id,
             db.users.findOne({ email: "democlient34@gmail.com" })._id,
             db.users.findOne({ email: "democlient22@gmail.com" })._id
-        ] 
+        ]
             })._id,
             db.activityunits.findOne({ activity: db.activities.findOne({ 
                 name: "Digitaal atelier"})._id,
@@ -1943,16 +1943,16 @@ db.workdays.insertMany([
             db.activityunits.findOne({ activity: db.activities.findOne({ 
                 name: "Gezelschapsspelen"})._id, 
                 clients: [
-            db.users.findOne({ email: "democlient2@gmail.com" })._id,
-            db.users.findOne({ email: "democlient17@gmail.com" })._id,
-            db.users.findOne({ email: "democlient30@gmail.com" })._id,
-            db.users.findOne({ email: "democlient31@gmail.com" })._id,
-            db.users.findOne({ email: "democlient25@gmail.com" })._id,
-            db.users.findOne({ email: "democlient27@gmail.com" })._id,
+            db.users.findOne({ email: "democlient28@gmail.com" })._id,
+            db.users.findOne({ email: "democlient36@gmail.com" })._id,
+            db.users.findOne({ email: "democlient24@gmail.com" })._id,
+            db.users.findOne({ email: "democlient6@gmail.com" })._id,
+            db.users.findOne({ email: "democlient22@gmail.com" })._id,
+            db.users.findOne({ email: "democlient26@gmail.com" })._id,
             db.users.findOne({ email: "democlient38@gmail.com" })._id
         ]
             })._id
-        ] }])
+        ] },
      { date: new Date("2019-11-18"), originalWeekNumber: 4, 
             amActivities: [
             db.activityunits.findOne({ activity: db.activities.findOne({
