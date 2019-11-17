@@ -12,13 +12,8 @@ router.get('/', auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let query = WorkdayTemplate.find()
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.find();
+    populateWorkdayTemplates(query);
     query.exec(function(err, workdayTemplates) {
         if (err) return next(err);
         res.json(workdayTemplates);
@@ -27,13 +22,8 @@ router.get('/', auth, function (req, res, next) {
 
 /* GET workday template by id */
 router.param("workdayTemplateId", function (req, res, next, id) {
-    let query = WorkdayTemplate.findById(id)
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.findById(id);
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplate) {
         if (err) return next(err);
         if (!workdayTemplate) return next(new Error("No WorkdayTemplate found with id: " + id));
@@ -48,19 +38,10 @@ router.get("/id/:workdayTemplateId", auth, function (req, res, next) {
     res.json(req.workdayTemplate);
 });
 
-/* GET workday templates by week */
-router.param("week", function (req, res, next, week) {
-    let weekRegex = /^[1-4]/gm;
-    if(!week.match(weekRegex))
-        return res.status(400).json({ message: "Please insert a valid week number (1, 2, 3 or 4)." });
-
-    let query = WorkdayTemplate.find({ weekNumber: week })
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+/* GET workday templates by name */
+router.param("name", function (req, res, next, name) {
+    let query = WorkdayTemplate.find({ templateName: name });
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
         if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
@@ -68,26 +49,43 @@ router.param("week", function (req, res, next, week) {
         return next();
     });
 });
-router.get("/:week", auth, function (req, res, next) {
+router.get("/:name", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
     res.json(req.workdayTemplate);
 });
 
-/* GET workday template by week and day */
+/* GET workday templates by name and week */
+router.param("week", function (req, res, next, week) {
+    let weekRegex = /^[1-4]/gm;
+    if(!week.match(weekRegex))
+        return res.status(400).json({ message: "Please insert a valid week number (1, 2, 3 or 4)." });
+
+    let query = WorkdayTemplate.find({ weekNumber: week });
+    populateWorkdayTemplates(query);
+    query.exec(function (err, workdayTemplates) {
+        if (err) return next(err);
+        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
+        req.workdayTemplates = workdayTemplates;
+        return next();
+    });
+});
+router.get("/:name/:week", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    res.json(req.workdayTemplate);
+});
+
+/* GET workday template by name, week and day */
 router.param("day", function (req, res, next, day) {
     let dayRegex = /^[1-5]/gm;
     if(!day.match(dayRegex))
         return res.status(400).json({ message: "Please insert a valid day number (1, 2, 3, 4 or 5)." });
 
-    let query = WorkdayTemplate.findOne({ dayNumber: day })
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+    let query = WorkdayTemplate.findOne({ dayNumber: day });
+    populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplate) {
         if (err) return next(err);
         if (!workdayTemplate) return next(new Error("No WorkdayTemplate found on day: " + day));
@@ -95,7 +93,7 @@ router.param("day", function (req, res, next, day) {
         return next();
     });
 });
-router.get("/:week/:day", auth, function (req, res, next) {
+router.get("/:name/:week/:day", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -140,6 +138,8 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     if (!req.user.admin) return res.status(401).end();
 
     let workdayTemplate = req.workdayTemplate;
+    if (req.body.templateName)
+        workdayTemplate.templateName = req.body.templateName;
     if (req.body.weekNumber)
         workdayTemplate.weekNumber = req.body.weekNumber;
     if (req.body.dayNumber)
@@ -163,7 +163,7 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
 });
 
 /* Create week from template week */
-router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
+router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -198,7 +198,7 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
     let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
 
     // Check if full week is present
-    WorkdayTemplate.find({week: req.params.weekToCopy}).exec(function (err, items) {
+    WorkdayTemplate.find({templateName: req.params.templateName, week: req.params.weekToCopy}).exec(function (err, items) {
         if (err) return next(err);
         if (items.length !== 5)
             return res.status(409).json({ message: "Week does not contain all workday templates yet." });
@@ -218,6 +218,7 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
                         if (date.getDay() > 5) {
                             let workday = new Workday({
                                 date: date,
+                                originalTemplateName: req.params.templateName,
                                 originalWeekNumber: req.params.weekToCopy
                             });
                             workday.save(function (err, workday) {
@@ -227,14 +228,16 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
                             });
                         } else {
                             WorkdayTemplate.findOne({
-                                week: req.params.weekToCopy,
-                                day: date.getDay()
+                                templateName: req.params.templateName,
+                                weekNumber: req.params.weekToCopy,
+                                dayNumber: date.getDay()
                             }).exec(function (err, template) {
                                 if (err) return next(err);
                                 // Create new workday
                                 let workday = new Workday({
                                     date: date,
-                                    originalWeekNumber: template.week,
+                                    originalTemplateName: template.templateName,
+                                    originalWeekNumber: template.weekNumber,
                                     daycareMentors: template.daycareMentors,
                                     morningBusses: template.morningBusses,
                                     amActivities: template.amActivities,
@@ -257,5 +260,16 @@ router.post("/createWeek/:weekToCopy/:date", auth, function (req, res, next) {
         }
     });
 });
+
+// Populate query
+function populateWorkdayTemplates(query) {
+    query
+        .populate({ path: "daycareMentors", select: '-salt -hash' })
+        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+}
 
 module.exports = router;
