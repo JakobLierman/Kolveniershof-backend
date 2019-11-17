@@ -60,6 +60,37 @@ router.get("/date/:date", auth, function (req, res, next) {
     res.json(req.workday);
 });
 
+/* GET workdays from week by date in week */
+router.param("weekdate", function (req, res, next, weekdateString) {
+    // Check if date is correctly formatted
+    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    if (!weekdateString.match(dateRegex))
+        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+    // Create new date
+    let givenDate = new Date(weekdateString.split("_")[2]+"-"+weekdateString.split("_")[1]+"-"+weekdateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let saturdayDate = addDays(fridayDate, 1);
+    let sundayDate = addDays(saturdayDate, 1);
+    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
+
+    let query = Workday.find({ date: { $in: dates } });
+    populateWorkdays(query);
+    query.exec(function (err, workdays) {
+        if (err) return next(err);
+        if (!workdays) return next(new Error("No Workdays found on date"));
+        req.workdays = workdays;
+        return next();
+    });
+});
+router.get("/week/:weekdate", auth, function (req, res, next) {
+    res.json(req.workdays);
+});
+
 /* GET workday by date by user */
 router.get("/date/:date/:userId", auth, function (req, res, next) {
     // Check permissions
@@ -67,50 +98,21 @@ router.get("/date/:date/:userId", auth, function (req, res, next) {
         if (req.user._id !== req.params.userId) return res.status(401).end();
     }
 
-    let workday = req.workday;
-    let clientWorkday = new Workday();
+    res.json(createClientWorkdayByWorkday(req.workday, req.params.userId));
+});
 
-    // Add date
-    clientWorkday.date = workday.date;
-    // Add morningBus
-    workday.morningBusses.forEach((morningBus) => {
-        let userIds = [];
-        morningBus.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(req.params.userId))
-            clientWorkday.morningBusses.push(morningBus);
-    });
-    // Add amActivity
-    workday.amActivities.forEach((amActivity) => {
-        let userIds = [];
-        amActivity.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(req.params.userId))
-            clientWorkday.amActivities.push(amActivity);
-    });
-    // Add lunch
-    clientWorkday.lunch = workday.lunch;
-    // Add pmActivity
-    workday.pmActivities.forEach((pmActivity) => {
-        let userIds = [];
-        pmActivity.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(req.params.userId))
-            clientWorkday.pmActivities.push(pmActivity);
-    });
-    // Add eveningBus
-    workday.eveningBusses.forEach((eveningBus) => {
-        let userIds = [];
-        eveningBus.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(req.params.userId))
-            clientWorkday.eveningBusses.push(eveningBus);
-    });
-    // Add holiday
-    clientWorkday.holiday = workday.holiday;
-    // Add comment
-    for (let comment of workday.comments) {
-        if (comment.client._id.toString() === req.params.userId)
-            clientWorkday.comments.push(comment); break;
-    }
+/* GET workdays from week by date in week by user */
+router.get("/week/:weekdate/:userId", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin)
+        if (req.user._id !== req.params.userId) return res.status(401).end();
 
-    res.json(clientWorkday);
+    let clientWorkdays = [];
+    req.workdays.forEach(workday => {
+        clientWorkdays.push(createClientWorkdayByWorkday(workday, req.params.userId));
+    });
+
+    res.json(clientWorkdays);
 });
 
 /* POST workday */
@@ -254,6 +256,66 @@ function populateWorkdays(query) {
         .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "comments.client", select: '-salt -hash' });
+}
+
+// Add days to date, creates copy
+function addDays(date, days) {
+    const copy = new Date(Number(date));
+    copy.setDate(date.getDate() + days);
+    return copy;
+}
+// Subtract days from date, creates copy
+function subtractDays(date, days) {
+    const copy = new Date(Number(date));
+    copy.setDate(date.getDate() - days);
+    return copy;
+}
+
+// Creates a workday for one client
+function createClientWorkdayByWorkday(workday, userId) {
+    let clientWorkday = new Workday();
+
+    // Add date
+    clientWorkday.date = workday.date;
+    // Add morningBus
+    workday.morningBusses.forEach((morningBus) => {
+        let userIds = [];
+        morningBus.clients.forEach((client) => userIds.push(client._id.toString()));
+        if (userIds.includes(userId))
+            clientWorkday.morningBusses.push(morningBus);
+    });
+    // Add amActivity
+    workday.amActivities.forEach((amActivity) => {
+        let userIds = [];
+        amActivity.clients.forEach((client) => userIds.push(client._id.toString()));
+        if (userIds.includes(userId))
+            clientWorkday.amActivities.push(amActivity);
+    });
+    // Add lunch
+    clientWorkday.lunch = workday.lunch;
+    // Add pmActivity
+    workday.pmActivities.forEach((pmActivity) => {
+        let userIds = [];
+        pmActivity.clients.forEach((client) => userIds.push(client._id.toString()));
+        if (userIds.includes(userId))
+            clientWorkday.pmActivities.push(pmActivity);
+    });
+    // Add eveningBus
+    workday.eveningBusses.forEach((eveningBus) => {
+        let userIds = [];
+        eveningBus.clients.forEach((client) => userIds.push(client._id.toString()));
+        if (userIds.includes(userId))
+            clientWorkday.eveningBusses.push(eveningBus);
+    });
+    // Add holiday
+    clientWorkday.holiday = workday.holiday;
+    // Add comment
+    for (let comment of workday.comments) {
+        if (comment.client._id.toString() === userId)
+            clientWorkday.comments.push(comment); break;
+    }
+
+    return clientWorkday;
 }
 
 module.exports = router;
