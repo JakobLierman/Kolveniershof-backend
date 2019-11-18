@@ -1,3 +1,6 @@
+
+
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -5,9 +8,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 // Environment variables
 require('dotenv').config();
+
+ 
 
 // Mongoose
 mongoose.connect(
@@ -39,6 +45,7 @@ var workdaysRouter = require('./routes/workdays');
 var workdayTemplatesRouter = require('./routes/workdayTemplates');
 
 var app = express();
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // cors for cross origin requests
 let cors = require('cors');
