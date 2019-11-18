@@ -214,6 +214,45 @@
           "url" : "https://kolv02-backend.herokuapp.com"
         } ]
       },
+      "/API/users/addAbsentDate/5dd2c2fc5ab0a500177e304e" : {
+        "post" : {
+            "tags" : [ "Users" ],
+          "description" : "Add absentDate for given user",
+          "requestBody" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/body"
+                },
+                "examples" : {
+                  "0" : {
+                    "value" : "{\r\n\t\"date\": \"2019-09-03T00:00:00.000Z\"\r\n}"
+                  }
+                }
+              }
+            }
+          },
+          "responses" : {
+            "200" : {
+              "description" : "Successfully added given absentDate for given user",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
       "/API/Users" : {
         "get" : {
           "tags" : [ "Users" ],
@@ -230,7 +269,59 @@
         "servers" : [ {
           "url" : "https://kolv02-backend.herokuapp.com"
         } ]
+      },
+      
+      "/API/users/client10@gmail.com" : {
+        "get" : {
+            "tags" : [ "Users" ],
+          "description" : "Get user by email",
+          "responses" : {
+            "200" : {
+              "description" : "Successfully returned user with corresponding email",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/users/id/5dc4aafe926b0b7f22d9fa8e" : {
+        "get" : {
+            "tags" : [ "Users" ],
+          "description" : "Get user by ID",
+          "responses" : {
+            "200" : {
+              "description" : "Successfully returned user with corresponding ID",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
       }
+      
     },
     "components" : {
       "schemas" : {
@@ -267,8 +358,16 @@
               "type" : "string"
             }
           }
-        }
-      },
+        },
+        "addAbsentDate" : {
+            "type" : "object",
+            "properties" : {
+              "date" : {
+                "type" : "string"
+              }
+            }
+          }
+      },      
       "securitySchemes" : {
         "bearerAuth" : {
           "type" : "http",
