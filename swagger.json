@@ -21,6 +21,305 @@
       "name" : "Workdays"
     } ],
     "paths" : {
+      "/API/activities/" : {
+        "post" : {
+          "tags" : [ "Activities" ],
+          "description" : "Post new Activity",
+          "requestBody" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/activity"
+                },
+                "examples" : {
+                  "0" : {
+                    "value" : "{\n    \"name\": \"TestActivity\",\n    \"icon\": \"mixer\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "responses" : {
+            "200" : {
+              "description" : "Successfully added new post",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/busses/id/{busIdDel}" : {
+        "delete" : {
+          "tags" : [ "Busses" ],
+          "description" : "Delete bus with given ID",
+          "parameters" : [ {
+            "name" : "busIdDel",
+            "in" : "path",
+            "description" : "The bus ID",
+            "required" : true,
+            "style" : "simple",
+            "explode" : false,
+            "schema" : {
+              "minimum" : 1,
+              "type" : "string"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Return true when successfully deleted",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/busses/id/{busIdGet}" : {
+        "get" : {
+          "tags" : [ "Busses" ],
+          "description" : "Get bus with given ID",
+          "parameters" : [ {
+            "name" : "busIdGet",
+            "in" : "path",
+            "description" : "The bus ID",
+            "required" : true,
+            "style" : "simple",
+            "explode" : false,
+            "schema" : {
+              "minimum" : 1,
+              "type" : "string"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Successfully returned bus with corresponding ID",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+    
+      
+      "/API/activities/units/{activityUnitIdGet}" : {
+      "get" : {
+        "tags" : [ "Activities" ],
+        "description" : "Get activityUnit with given ID",
+        "parameters" : [ {
+          "name" : "activityUnitIdGet",
+          "in" : "path",
+          "description" : "The activityUnit ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned activityUnit with corresponding ID"
+          }
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "servers" : [ {
+        "url" : "https://kolv02-backend.herokuapp.com"
+      } ]
+    },
+    "/API/busses/units/{busUnitIdGet}" : {
+      "get" : {
+        "tags" : [ "Busses" ],
+        "description" : "Get busUnit with given ID",
+        "parameters" : [ {
+          "name" : "busUnitIdGet",
+          "in" : "path",
+          "description" : "The busUnit ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "minimum" : 1,
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned busUnit with corresponding ID",
+            "content" : {
+              "application/json; charset=utf-8" : {
+                "schema" : {
+                  "type" : "string"
+                },
+                "examples" : { }
+              }
+            }
+          }
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "servers" : [ {
+        "url" : "https://kolv02-backend.herokuapp.com"
+      } ]
+    },    
+      "/API/activities/units" : {
+        "get" : {
+          "tags" : [ "Activities" ],
+          "description" : "Get all activityUnits",
+          "responses" : {
+            "200" : {
+              "description" : "Successfully returned list of all activityUnits"
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/activities/id/{activityIdDel}" : {
+        "delete" : {
+          "tags" : [ "Activities" ],
+          "description" : "Delete activity with given ID",
+          "parameters" : [ {
+            "name" : "activityIdDel",
+            "in" : "path",
+            "description" : "The activity ID",
+            "required" : true,
+            "style" : "simple",
+            "explode" : false,
+            "schema" : {
+              "minimum" : 1,
+              "type" : "string"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Return true when succesfully deleted",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/busses/units/" : {
+        "post" : {
+          "tags" : [ "Busses" ],
+          "description" : "Post new BusUnits",
+          "requestBody" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/body"
+                },
+                "examples" : {
+                  "0" : {
+                    "value" : "{\n    \"mentors\": [\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4ab15926b0b7f22d9fa97\",\n            \"email\": \"mentor4@gmail.com\",\n            \"firstName\": \"Tracey\",\n            \"lastName\": \"Lambert\",\n            \"birthday\": \"1986-01-26T00:00:00.000Z\",\n            \"__v\": 0\n        },\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4ab17926b0b7f22d9fa98\",\n            \"email\": \"mentor5@gmail.com\",\n            \"firstName\": \"Amanda\",\n            \"lastName\": \"De Clercq\",\n            \"birthday\": \"1986-02-22T00:00:00.000Z\",\n            \"__v\": 0\n        }\n    ],\n    \"clients\": [\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4aae7926b0b7f22d9fa85\",\n            \"email\": \"client1@gmail.com\",\n            \"firstName\": \"Benoît\",\n            \"lastName\": \"Vandenbulcke\",\n            \"birthday\": \"1964-02-11T00:00:00.000Z\",\n            \"__v\": 0\n        },\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4aae9926b0b7f22d9fa86\",\n            \"email\": \"client2@gmail.com\",\n            \"firstName\": \"Samuel\",\n            \"lastName\": \"Francois\",\n            \"birthday\": \"1965-10-28T00:00:00.000Z\",\n            \"__v\": 0\n        },\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4aaf1926b0b7f22d9fa89\",\n            \"email\": \"client5@gmail.com\",\n            \"firstName\": \"Adam\",\n            \"lastName\": \"Coppens\",\n            \"birthday\": \"1990-08-15T00:00:00.000Z\",\n            \"__v\": 0\n        },\n        {\n            \"admin\": false,\n            \"absentDates\": [],\n            \"_id\": \"5dc4aafe926b0b7f22d9fa8e\",\n            \"email\": \"client10@gmail.com\",\n            \"firstName\": \"Jasmine\",\n            \"lastName\": \"Piat\",\n            \"birthday\": \"1975-05-30T00:00:00.000Z\",\n            \"__v\": 0\n        }\n    ],\n    \n    \"bus\": {\n        \"_id\": \"5dce5259fb69c00affb0841d\",\n        \"name\": \"Geel\",\n        \"color\": \"#FDFD96\",\n        \"icon\": \"bus\"\n    }\n}"
+                  }
+                }
+              }
+            }
+          },
+          "responses" : {
+            "200" : {
+              "description" : "Successfully added new busUnit",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
+      "/API/busses/units" : {
+        "get" : {
+          "tags" : [ "Busses" ],
+          "description" : "Get all busunits",
+          "responses" : {
+            "200" : {
+              "description" : "Succesfully returned list of all busUnits",
+              "content" : {
+                "application/json; charset=utf-8" : {
+                  "schema" : {
+                    "type" : "string"
+                  },
+                  "examples" : { }
+                }
+              }
+            }
+          },
+          "servers" : [ {
+            "url" : "https://kolv02-backend.herokuapp.com"
+          } ]
+        },
+        "servers" : [ {
+          "url" : "https://kolv02-backend.herokuapp.com"
+        } ]
+      },
       "/API/workdays" : {
         "get" : {
           "tags" : [ "Workdays" ],
@@ -359,6 +658,31 @@
             }
           }
         },
+        "bus" : {
+          "type" : "object",
+          "properties" : {
+            "color" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "icon" : {
+              "type" : "string"
+            }
+          }
+        },
+        "activity" : {
+          "type" : "object",
+          "properties" : {
+            "name" : {
+              "type" : "string"
+            },
+            "icon" : {
+              "type" : "string"
+            }
+          }
+        },
         "addAbsentDate" : {
             "type" : "object",
             "properties" : {
@@ -367,7 +691,45 @@
               }
             }
           }
-      },      
+      },
+      "APIbussesunits_bus" : {
+        "type" : "object",
+        "properties" : {
+          "color" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "icon" : {
+            "type" : "string"
+          },
+          "_id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "body" : {
+        "type" : "object",
+        "properties" : {
+          "bus" : {
+            "$ref" : "#/components/schemas/APIbussesunits_bus"
+          },
+          "clients" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/APIbussesunits_clients"
+            }
+          },
+          "mentors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/APIbussesunits_clients"
+            }
+          }
+        }
+      },
+          
       "securitySchemes" : {
         "bearerAuth" : {
           "type" : "http",
