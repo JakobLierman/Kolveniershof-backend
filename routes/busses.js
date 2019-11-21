@@ -37,8 +37,7 @@ router.post("/", auth, function (req, res, next) {
 
     let bus = new Bus({
         name: req.body.name,
-        color: req.body.color,
-        icon: req.body.icon
+        color: req.body.color
     });
     bus.save(function (err, bus) {
         if (err) return next(err);
@@ -67,8 +66,6 @@ router.patch("/id/:busId", auth, function (req, res, next) {
         bus.name = req.body.name;
     if (req.body.color)
         bus.color = req.body.color;
-    if (req.body.icon)
-        bus.icon = req.body.icon;
     bus.save(function (err, bus) {
         if (err) return next(err);
         res.json(bus);
