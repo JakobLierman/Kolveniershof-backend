@@ -33,6 +33,7 @@
   "paths": {
     "/api/lunches/units/": {
       "post": {
+        "tags": ["Lunches"],
         "summary": "add new lunch unit",
         "description": "Post lunch unit",
         "requestBody": {
@@ -116,6 +117,7 @@
         }
       ],
       "patch": {
+        "tags": ["Lunches"],
         "summary": "update lunch unit",
         "description": "Patch lunch unit",
         "parameters": [
@@ -164,6 +166,7 @@
           }
         ],
         "delete": {
+          "tags": ["Lunches"],
           "summary": "delete lunch unit",
           "description": "Delete lunch unit by id",
           "parameters": [
