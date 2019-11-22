@@ -73,10 +73,10 @@ router.post("/register", function(req, res, next) {
     !req.body.lastName ||
     !req.body.birthday
   )
-    return res.status(400).json({ message: "Please fill out all fields." });
+    return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
   // Check if password is strong enough
   if (zxcvbn(req.body.password).score < 2)
-    return res.status(400).json({ msg: "Password is not strong enough." });
+    return res.status(400).send("Wachtwoord is niet sterk genoeg."); // TODO - i18n
 
   let user = new User();
   user.email = req.body.email.trim().toLowerCase();
@@ -102,7 +102,7 @@ router.post("/register", function(req, res, next) {
 router.post("/login", function(req, res, next) {
   // Check if all fields are filled in
   if (!req.body.email || !req.body.password) {
-    return res.status(400).json({ message: "Please fill out all fields." });
+    return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
   }
   passport.authenticate("local", function(err, user, info) {
     if (err) {
