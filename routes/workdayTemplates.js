@@ -49,7 +49,7 @@ router.param("name", function (req, res, next, name) {
         return next();
     });
 });
-router.get("/:name", auth, function (req, res, next) {
+router.get("/name/:name", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -71,7 +71,7 @@ router.param("week", function (req, res, next, week) {
         return next();
     });
 });
-router.get("/:name/:week", auth, function (req, res, next) {
+router.get("/name/:name/:week", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -93,7 +93,7 @@ router.param("day", function (req, res, next, day) {
         return next();
     });
 });
-router.get("/:name/:week/:day", auth, function (req, res, next) {
+router.get("/name/:name/:week/:day", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
