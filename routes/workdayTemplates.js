@@ -38,6 +38,20 @@ router.get("/id/:workdayTemplateId", auth, function (req, res, next) {
     res.json(req.workdayTemplate);
 });
 
+/* GET templateNames */
+router.get("/names", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    let query = WorkdayTemplate.distinct('templateName');
+    query.exec(function(err, templateNames) {
+        if (err) return next(err);
+        templateNames = templateNames.filter(Boolean);
+        templateNames.sort();
+        res.json(templateNames);
+    });
+});
+
 /* GET workday templates by name */
 router.param("name", function (req, res, next, name) {
     let query = WorkdayTemplate.find({ templateName: name });
@@ -49,7 +63,7 @@ router.param("name", function (req, res, next, name) {
         return next();
     });
 });
-router.get("/:name", auth, function (req, res, next) {
+router.get("/name/:name", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -71,7 +85,7 @@ router.param("week", function (req, res, next, week) {
         return next();
     });
 });
-router.get("/:name/:week", auth, function (req, res, next) {
+router.get("/name/:name/:week", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -93,7 +107,7 @@ router.param("day", function (req, res, next, day) {
         return next();
     });
 });
-router.get("/:name/:week/:day", auth, function (req, res, next) {
+router.get("/name/:name/:week/:day", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
