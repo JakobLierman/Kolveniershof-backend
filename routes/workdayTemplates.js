@@ -43,7 +43,13 @@ router.get("/names", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    // TODO - distinct return names
+    let query = WorkdayTemplate.distinct('templateName');
+    query.exec(function(err, templateNames) {
+        if (err) return next(err);
+        templateNames = templateNames.filter(Boolean);
+        templateNames.sort();
+        res.json(templateNames);
+    });
 });
 
 /* GET workday templates by name */
