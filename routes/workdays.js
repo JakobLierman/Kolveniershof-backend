@@ -126,6 +126,30 @@ router.post("/", auth, function (req, res, next) {
     });
 });
 
+/* Create empty week */
+router.post("/week/:weekdate", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    if (req.workdays.length !== 0) return res.status(409).send("Week not empty");
+
+    // Create workdays for full week
+    let resultJson = {};
+    getWeek(req.params.weekdate).forEach(date => {
+        // Create new workday
+        let workday = new Workday({
+            date: date,
+            holiday: false
+        });
+        workday.save(function (err, workday) {
+            if (err) return next(err);
+            // Add workday to json
+            resultJson[date.toString().split(' ')[0]] = workday;
+        });
+    });
+    res.json(resultJson);
+});
+
 /* DELETE workday */
 router.delete("/id/:workdayId", auth, function (req, res, next) {
     // Check permissions
