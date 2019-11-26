@@ -38,6 +38,14 @@ router.get("/id/:workdayTemplateId", auth, function (req, res, next) {
     res.json(req.workdayTemplate);
 });
 
+/* GET templateNames */
+router.get("/names", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // TODO - distinct return names
+});
+
 /* GET workday templates by name */
 router.param("name", function (req, res, next, name) {
     let query = WorkdayTemplate.find({ templateName: name });
