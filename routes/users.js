@@ -51,11 +51,9 @@ router.get("/:email", function(req, res, next) {
 router.post("/isValidEmail", function(req, res, next) {
   // Check if all fields are filled in
   if (!req.body.email)
-    return res.status(400).json({ message: "Please fill out all fields." });
-  User.find({ email: req.body.email.trim().toLowerCase() }, function(
-    err,
-    result
-  ) {
+    return res.status(400).json("Please fill out all fields.");
+
+  User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
     if (result.length) {
       res.send(false);
     } else {
@@ -149,7 +147,7 @@ router.patch("/id/:userId", auth, function(req, res, next) {
 /* POST add absent date */
 router.post("/addAbsentDate/:userId", auth, function(req, res, next) {
   // Check permissions
-  // TODO
+  if (!req.user.admin) return res.status(401).end();
 
   if (!req.body.date)
     return res.status(400).json({ message: "Please fill out all fields." });
