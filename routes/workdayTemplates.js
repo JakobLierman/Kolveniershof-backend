@@ -58,7 +58,7 @@ router.param("name", function (req, res, next, name) {
     populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
-        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
+        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found with name: " + name));
         req.workdayTemplates = workdayTemplates;
         return next();
     });
@@ -67,7 +67,7 @@ router.get("/name/:name", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    res.json(req.workdayTemplate);
+    res.json(req.workdayTemplates);
 });
 
 /* GET workday templates by name and week */
@@ -89,7 +89,7 @@ router.get("/name/:name/:week", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    res.json(req.workdayTemplate);
+    res.json(req.workdayTemplates);
 });
 
 /* GET workday template by name, week and day */
@@ -183,12 +183,26 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
 
     const dateString = req.params.date;
 
-    // Check if date is correctly formatted
-    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
-    if (!dateString.match(dateRegex))
-        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+    let dateString = req.params.date;
+    if(!checkDateFormat(dateString))
+        return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
+    // Create new date
+    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let saturdayDate = addDays(fridayDate, 1);
+    let sundayDate = addDays(saturdayDate, 1);
+    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
 
-    const dates = getWeek(dateString);
+  
+  
+  
+  
+  
 
     // Check if full week is present
     WorkdayTemplate.find({templateName: req.params.templateName, week: req.params.weekToCopy}).exec(function (err, items) {
@@ -208,7 +222,7 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
                     // Copy template content, create new workDays
                     let resultJson = {};
                     dates.forEach(date => {
-                        if (date.getDay() > 5) {
+                        if (date.getDay() === (6 || 0)) {
                             let workday = new Workday({
                                 date: date,
                                 originalTemplateName: req.params.templateName,
@@ -292,6 +306,12 @@ function populateWorkdayTemplates(query) {
         .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] });
+}
+
+// Check if date is correctly formatted
+function checkDateFormat(dateString) {
+    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    return dateString.match(dateRegex);
 }
 
 module.exports = router;

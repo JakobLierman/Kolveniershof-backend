@@ -13,8 +13,8 @@ mongoose.model('Comment', CommentSchema);
 
 let WorkdaySchema = new mongoose.Schema({
     date: { type: Date, required: true, unique: true },
-    originalTemplateName: { type: String, required: true },
-    originalWeekNumber: { type: Number, required: true, min: 1, max: 4 },
+    originalTemplateName: { type: String },
+    originalWeekNumber: { type: Number, min: 1, max: 4 },
     daycareMentors: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

@@ -19,6 +19,26 @@ router.get("/", function(req, res, next) {
   });
 });
 
+/* GET mentors (admin == true) */
+router.get("/mentors", function (req, res, next) {
+  let query = User.find({ admin: true }, '-salt -hash');
+  query.sort("firstName");
+  query.exec(function(err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
+});
+
+/* GET clients (admin == false) */
+router.get("/clients", function (req, res, next) {
+  let query = User.find({ $or: [{ admin: false }, { admin: { $exists: false } }] }, '-salt -hash');
+  query.sort("firstName");
+  query.exec(function(err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
+});
+
 /* GET user by id. */
 router.param("userId", function(req, res, next, id) {
   let query = User.findById(id, '-salt -hash');
@@ -51,11 +71,9 @@ router.get("/:email", function(req, res, next) {
 router.post("/isValidEmail", function(req, res, next) {
   // Check if all fields are filled in
   if (!req.body.email)
-    return res.status(400).json({ message: "Please fill out all fields." });
-  User.find({ email: req.body.email.trim().toLowerCase() }, function(
-    err,
-    result
-  ) {
+    return res.status(400).json("Please fill out all fields.");
+
+  User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
     if (result.length) {
       res.send(false);
     } else {
@@ -149,7 +167,7 @@ router.patch("/id/:userId", auth, function(req, res, next) {
 /* POST add absent date */
 router.post("/addAbsentDate/:userId", auth, function(req, res, next) {
   // Check permissions
-  // TODO
+  if (!req.user.admin) return res.status(401).end();
 
   if (!req.body.date)
     return res.status(400).json({ message: "Please fill out all fields." });
