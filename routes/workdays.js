@@ -9,14 +9,8 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET workdays */
 router.get('/', auth, function(req, res, next) {
-    let query = Workday.find()
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate("comments.client");
+    let query = Workday.find();
+    populateWorkdays(query);
     query.exec(function(err, workdays) {
         if (err) return next(err);
         res.json(workdays);
@@ -61,22 +55,11 @@ router.get("/date/:date", auth, function (req, res, next) {
 });
 
 /* GET workdays from week by date in week */
-router.param("weekdate", function (req, res, next, weekdateString) {
-    // Check if date is correctly formatted
-    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
-    if (!weekdateString.match(dateRegex))
-        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
-    // Create new date
-    let givenDate = new Date(weekdateString.split("_")[2]+"-"+weekdateString.split("_")[1]+"-"+weekdateString.split("_")[0]);
-    // Find weekdays based on date
-    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
-    let tuesdayDate = addDays(mondayDate, 1);
-    let wednesdayDate = addDays(tuesdayDate, 1);
-    let thursdayDate = addDays(wednesdayDate, 1);
-    let fridayDate = addDays(thursdayDate, 1);
-    let saturdayDate = addDays(fridayDate, 1);
-    let sundayDate = addDays(saturdayDate, 1);
-    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
+router.param("weekdate", function (req, res, next, dateString) {
+    if(!checkDateFormat(dateString))
+        return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
+
+    const dates = getWeek(dateString);
 
     let query = Workday.find({ date: { $in: dates } });
     populateWorkdays(query);
@@ -135,6 +118,30 @@ router.post("/", auth, function (req, res, next) {
         if (err) return next(err);
         res.json(workday);
     });
+});
+
+/* Create empty week */
+router.post("/week/:weekdate", auth, function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    if (req.workdays.length !== 0) return res.status(409).send("Week not empty");
+
+    // Create workdays for full week
+    let resultJson = {};
+    getWeek(req.params.weekdate).forEach(date => {
+        // Create new workday
+        let workday = new Workday({
+            date: date,
+            holiday: false
+        });
+        workday.save(function (err, workday) {
+            if (err) return next(err);
+            // Add workday to json
+            resultJson[date.toString().split(' ')[0]] = workday;
+        });
+    });
+    res.json(resultJson);
 });
 
 /* DELETE workday */
@@ -258,17 +265,39 @@ function populateWorkdays(query) {
         .populate({ path: "comments.client", select: '-salt -hash' });
 }
 
-// Add days to date, creates copy
-function addDays(date, days) {
-    const copy = new Date(Number(date));
-    copy.setDate(date.getDate() + days);
-    return copy;
+// Check if date is correctly formatted
+function checkDateFormat(dateString) {
+    let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
+    return dateString.match(dateRegex);
 }
-// Subtract days from date, creates copy
-function subtractDays(date, days) {
-    const copy = new Date(Number(date));
-    copy.setDate(date.getDate() - days);
-    return copy;
+
+// Get week from dateString
+function getWeek(dateString) {
+    // Add days to date, creates copy
+    function addDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() + days);
+        return copy;
+    }
+    // Subtract days from date, creates copy
+    function subtractDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() - days);
+        return copy;
+    }
+
+    // Create new date
+    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let saturdayDate = addDays(fridayDate, 1);
+    let sundayDate = addDays(saturdayDate, 1);
+
+    return [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
 }
 
 // Creates a workday for one client
