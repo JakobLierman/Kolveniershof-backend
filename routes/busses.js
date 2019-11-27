@@ -93,7 +93,7 @@ router.param("busUnitId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:busUnitId", auth, function (req, res, next) {
+router.get("/units/id/:busUnitId", auth, function (req, res, next) {
     res.json(req.busUnit);
 });
 
@@ -114,7 +114,7 @@ router.post("/units/", auth, function (req, res, next) {
 });
 
 /* DELETE busUnit */
-router.delete("/units/:busUnitId", auth, function (req, res, next) {
+router.delete("/units/id/:busUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -125,7 +125,7 @@ router.delete("/units/:busUnitId", auth, function (req, res, next) {
 });
 
 /* PATCH busUnit */
-router.patch("/units/:busUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:busUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

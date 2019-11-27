@@ -93,7 +93,7 @@ router.param("activityUnitId", auth, function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:activityUnitId", auth, function (req, res, next) {
+router.get("/units/id/:activityUnitId", auth, function (req, res, next) {
     res.json(req.activityUnit);
 });
 
@@ -114,7 +114,7 @@ router.post("/units/", auth, function (req, res, next) {
 });
 
 /* DELETE activityUnit */
-router.delete("/units/:activityUnitId", auth, function (req, res, next) {
+router.delete("/units/id/:activityUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -125,7 +125,7 @@ router.delete("/units/:activityUnitId", auth, function (req, res, next) {
 });
 
 /* PATCH activityUnit */
-router.patch("/units/:activityUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:activityUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

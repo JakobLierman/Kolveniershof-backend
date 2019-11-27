@@ -27,7 +27,7 @@ router.param("lunchUnitId", function (req, res, next, id) {
         return next();
     });
 });
-router.get("/units/:lunchUnitId", auth, function (req, res, next) {
+router.get("/units/id/:lunchUnitId", auth, function (req, res, next) {
     res.json(req.lunchUnit);
 });
 
@@ -48,7 +48,7 @@ router.post("/units/", auth, function (req, res, next) {
 });
 
 /* DELETE lunchUnit */
-router.delete("/units/:lunchUnitId", auth, function (req, res, next) {
+router.delete("/units/id/:lunchUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -59,7 +59,7 @@ router.delete("/units/:lunchUnitId", auth, function (req, res, next) {
 });
 
 /* PATCH lunchUnit */
-router.patch("/units/:lunchUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:lunchUnitId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
