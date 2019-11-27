@@ -9,14 +9,8 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET workdays */
 router.get('/', auth, function(req, res, next) {
-    let query = Workday.find()
-        .populate("daycareMentors")
-        .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
-        .populate("comments.client");
+    let query = Workday.find();
+    populateWorkdays(query);
     query.exec(function(err, workdays) {
         if (err) return next(err);
         res.json(workdays);
