@@ -21,7 +21,12 @@ router.get("/", function(req, res, next) {
 
 /* GET mentors (admin == true) */
 router.get("/mentors", function (req, res, next) {
-  // TODO
+  let query = User.find({ admin: true }, '-salt -hash');
+  query.sort("firstName");
+  query.exec(function(err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
 });
 
 /* GET clients (admin == false) */
