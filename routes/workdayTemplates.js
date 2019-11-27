@@ -182,27 +182,9 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
     if (!req.user.admin) return res.status(401).end();
 
     const dateString = req.params.date;
-
-    let dateString = req.params.date;
     if(!checkDateFormat(dateString))
         return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
-    // Create new date
-    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
-    // Find weekdays based on date
-    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
-    let tuesdayDate = addDays(mondayDate, 1);
-    let wednesdayDate = addDays(tuesdayDate, 1);
-    let thursdayDate = addDays(wednesdayDate, 1);
-    let fridayDate = addDays(thursdayDate, 1);
-    let saturdayDate = addDays(fridayDate, 1);
-    let sundayDate = addDays(saturdayDate, 1);
-    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
-
-  
-  
-  
-  
-  
+    const dates = getWeek(dateString);
 
     // Check if full week is present
     WorkdayTemplate.find({templateName: req.params.templateName, week: req.params.weekToCopy}).exec(function (err, items) {

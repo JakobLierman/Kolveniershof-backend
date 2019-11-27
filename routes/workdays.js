@@ -59,9 +59,7 @@ router.get("/date/:date", auth, function (req, res, next) {
 router.param("weekdate", function (req, res, next, dateString) {
     if(!checkDateFormat(dateString))
         return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
-
     const dates = getWeek(dateString);
-
 
     let query = Workday.find({ date: { $in: dates } });
     populateWorkdays(query);
