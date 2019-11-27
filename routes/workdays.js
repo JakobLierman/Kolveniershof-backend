@@ -43,7 +43,7 @@ router.param("date", function (req, res, next, dateString) {
     // Check if date is correctly formatted
     let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
     if (!dateString.match(dateRegex))
-        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+        return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
     // Create new date
     let date = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
 
@@ -65,7 +65,7 @@ router.param("weekdate", function (req, res, next, weekdateString) {
     // Check if date is correctly formatted
     let dateRegex = /^(?:(?:31(_)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(_)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(_)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(_)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gm;
     if (!weekdateString.match(dateRegex))
-        return res.status(400).json({ message: "Please insert a valid date (format: DD_MM_YYYY)." });
+        return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
     // Create new date
     let givenDate = new Date(weekdateString.split("_")[2]+"-"+weekdateString.split("_")[1]+"-"+weekdateString.split("_")[0]);
     // Find weekdays based on date
