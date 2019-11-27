@@ -153,10 +153,8 @@ router.delete("/week/:weekdate", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.workdays.remove(function (err) {
-        if (err) return next(err);
-        res.send(true);
-    });
+    req.workdays.forEach(workday => workday.remove(function (err) { if (err) return next(err); }));
+    res.send(true);
 });
 
 /* PATCH workday */
