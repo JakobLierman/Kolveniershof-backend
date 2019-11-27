@@ -19,6 +19,16 @@ router.get("/", function(req, res, next) {
   });
 });
 
+/* GET mentors (admin == true) */
+router.get("/mentors", function (req, res, next) {
+  // TODO
+});
+
+/* GET clients (admin == false) */
+router.get("/clients", function (req, res, next) {
+  // TODO
+});
+
 /* GET user by id. */
 router.param("userId", function(req, res, next, id) {
   let query = User.findById(id, '-salt -hash');
