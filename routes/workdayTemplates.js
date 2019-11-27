@@ -58,7 +58,7 @@ router.param("name", function (req, res, next, name) {
     populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
-        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
+        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found with name: " + name));
         req.workdayTemplates = workdayTemplates;
         return next();
     });
@@ -67,7 +67,7 @@ router.get("/name/:name", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    res.json(req.workdayTemplate);
+    res.json(req.workdayTemplates);
 });
 
 /* GET workday templates by name and week */
@@ -89,7 +89,7 @@ router.get("/name/:name/:week", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    res.json(req.workdayTemplate);
+    res.json(req.workdayTemplates);
 });
 
 /* GET workday template by name, week and day */
