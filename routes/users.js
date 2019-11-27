@@ -31,7 +31,12 @@ router.get("/mentors", function (req, res, next) {
 
 /* GET clients (admin == false) */
 router.get("/clients", function (req, res, next) {
-  // TODO
+  let query = User.find({ $or: [{ admin: false }, { admin: { $exists: false } }] }, '-salt -hash');
+  query.sort("firstName");
+  query.exec(function(err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
 });
 
 /* GET user by id. */
