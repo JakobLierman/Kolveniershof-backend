@@ -181,33 +181,10 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    // Add days to date, creates copy
-    function addDays(date, days) {
-        const copy = new Date(Number(date));
-        copy.setDate(date.getDate() + days);
-        return copy;
-    }
-    // Subtract days from date, creates copy
-    function subtractDays(date, days) {
-        const copy = new Date(Number(date));
-        copy.setDate(date.getDate() - days);
-        return copy;
-    }
-
-    let dateString = req.params.date;
+    const dateString = req.params.date;
     if(!checkDateFormat(dateString))
         return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
-    // Create new date
-    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
-    // Find weekdays based on date
-    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
-    let tuesdayDate = addDays(mondayDate, 1);
-    let wednesdayDate = addDays(tuesdayDate, 1);
-    let thursdayDate = addDays(wednesdayDate, 1);
-    let fridayDate = addDays(thursdayDate, 1);
-    let saturdayDate = addDays(fridayDate, 1);
-    let sundayDate = addDays(saturdayDate, 1);
-    let dates = [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
+    const dates = getWeek(dateString);
 
     // Check if full week is present
     WorkdayTemplate.find({templateName: req.params.templateName, week: req.params.weekToCopy}).exec(function (err, items) {
@@ -272,6 +249,35 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
         }
     });
 });
+
+// Get week from dateString
+function getWeek(dateString) {
+    // Add days to date, creates copy
+    function addDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() + days);
+        return copy;
+    }
+    // Subtract days from date, creates copy
+    function subtractDays(date, days) {
+        const copy = new Date(Number(date));
+        copy.setDate(date.getDate() - days);
+        return copy;
+    }
+
+    // Create new date
+    let givenDate = new Date(dateString.split("_")[2]+"-"+dateString.split("_")[1]+"-"+dateString.split("_")[0]);
+    // Find weekdays based on date
+    let mondayDate = subtractDays(givenDate, (givenDate.getDay() - 1));
+    let tuesdayDate = addDays(mondayDate, 1);
+    let wednesdayDate = addDays(tuesdayDate, 1);
+    let thursdayDate = addDays(wednesdayDate, 1);
+    let fridayDate = addDays(thursdayDate, 1);
+    let saturdayDate = addDays(fridayDate, 1);
+    let sundayDate = addDays(saturdayDate, 1);
+
+    return [mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate];
+}
 
 // Populate query
 function populateWorkdayTemplates(query) {
