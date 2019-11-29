@@ -2,9 +2,9 @@
 
 <h1 align="center">Kolveniershof API</h1>
 
-The 'Kolveniershof' wepplication is an application made to guide mentally disabled people through their weekly planning at the day care institution ([Ave Regina](https://www.averegina.be/vz---dagondersteuning.html)).
+The 'Kolveniershof' Android and webapplications are applications made to guide mentally disabled people through their weekly planning at the day care institution ([Ave Regina](https://www.averegina.be/vz---dagondersteuning.html)).
 
-This is a RESTful API for the Kolveniershof project.
+This is a RESTful API for the applications.
 
 This project is part of the [Project III: Mobile apps](https://bamaflexweb.hogent.be/BMFUIDetailxOLOD.aspx?a=110488&b=1&c=1) course for the Bachelor of Applied Informatics at the Ghent University College [HoGent](https://www.hogent.be/en/) (Academic year 2019-2020).
 
