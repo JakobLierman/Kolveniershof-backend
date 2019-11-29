@@ -1,4 +1,4 @@
-<p align="center"><img src="./src/assets/img/logo.svg?raw=true" width="200px"/></p>
+<p align="center"><img src="./backend_icon.svg" width="200px"/></p>
 
 <h1 align="center">Kolveniershof API</h1>
 
