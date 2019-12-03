@@ -40,6 +40,9 @@ var workdayTemplatesRouter = require('./routes/workdayTemplates');
 
 var app = express();
 
+// Swagger endpoint
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // cors for cross origin requests
 let cors = require('cors');
 app.use(cors({ origin: '*' }));
@@ -49,8 +52,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
-app.use('/API', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/API/users', usersRouter);
 app.use('/API/activities', activitiesRouter);
 app.use('/API/busses', bussesRouter);
