@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var array = require('lodash/array');
 let mongoose = require('mongoose');
 let Activity = mongoose.model("Activity");
 let ActivityUnit = mongoose.model("ActivityUnit");
+let Workday = mongoose.model("Workday");
+let WorkdayTemplate = mongoose.model("WorkdayTemplate");
 let jwt = require('express-jwt');
 
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
@@ -83,7 +86,7 @@ router.get("/units/", auth, function(req, res, next) {
 });
 
 /* GET activityUnit by id */
-router.param("activityUnitId", auth, function (req, res, next, id) {
+router.param("activityUnitId", function (req, res, next, id) {
     let query = ActivityUnit.findById(id)
         .populate(['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function (err, activityUnit) {
@@ -114,7 +117,7 @@ router.post("/units/", auth, function (req, res, next) {
 });
 
 /* DELETE activityUnit */
-router.delete("/units/id/:activityUnitId", auth, function (req, res, next) {
+router.delete("/units/id/:activityUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
@@ -122,6 +125,79 @@ router.delete("/units/id/:activityUnitId", auth, function (req, res, next) {
         if (err) return next(err);
         res.send(true);
     });
+});
+
+/* DELETE activityUnit from workday/workdayTemplate */
+router.delete("/units/id/:activityUnitId", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Check if all required fields are filled in
+    if (!req.body.workdayId && !req.body.workdayTemplateId)
+        return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
+
+    // Find all elements with usages
+    let workdaysWithUsage = await Workday.find({
+        $or: [{ amActivities: req.activityUnit }, { pmActivities: req.activityUnit }]
+    }).lean();
+    let workdayTemplatesWithUsage = await WorkdayTemplate.find({
+        $or: [{ amActivities: req.activityUnit }, { pmActivities: req.activityUnit }]
+    }).lean();
+
+    // Delete unit from workday/workdayTemplate
+    if (req.body.workdayId) {
+        Workday.findById(req.body.workdayId, (err, workday) => {
+            if (err) return next(err);
+            if (!workday) return next(new Error("No workday found"));
+            array.remove(workday.amActivities, function(activityUnit) {
+                return activityUnit._id.toString() === req.activityUnit._id.toString();
+            });
+            array.remove(workday.pmActivities, function(activityUnit) {
+                return activityUnit._id.toString() === req.activityUnit._id.toString();
+            });
+            workday.markModified("amActivities");
+            workday.markModified("pmActivities");
+            workday.save().then(updatedWorkday => {
+                array.remove(workdaysWithUsage, function (workdayDel) {
+                    return workdayDel._id.toString() === updatedWorkday._id.toString();
+                });
+                // Delete based on more than one usage
+                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
+            });
+        });
+    } else if (req.body.workdayTemplateId) {
+        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
+            if (err) return next(err);
+            if (!workdayTemplate) return next(new Error("No workdayTemplate found"));
+            array.remove(workdayTemplate.amActivities, function(activityUnit) {
+                return activityUnit._id.toString() === req.activityUnit._id.toString();
+            });
+            array.remove(workdayTemplate.pmActivities, function(activityUnit) {
+                return activityUnit._id.toString() === req.activityUnit._id.toString();
+            });
+            workdayTemplate.markModified("amActivities");
+            workdayTemplate.markModified("pmActivities");
+            workdayTemplate.save().then(function (updatedWorkdayTemplate) {
+                array.remove(workdayTemplatesWithUsage, function (workdayTemplateDel) {
+                    return workdayTemplateDel._id.toString() === updatedWorkdayTemplate._id.toString()
+                });
+                // Delete based on more than one usage
+                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
+            });
+        });
+    }
+
+    // Delete unit
+    function deleteUnit(hasUsages) {
+        if (!hasUsages) {
+            req.activityUnit.remove(function (err) {
+                if (err) return next(err);
+                res.send(true);
+            });
+        } else {
+            res.send(true);
+        }
+    }
 });
 
 /* PATCH activityUnit */
