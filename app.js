@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 // Environment variables
 require('dotenv').config();
 
@@ -29,7 +30,6 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
 require('./config/passport');
 
 // Routes
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var activitiesRouter = require('./routes/activities');
 var bussesRouter = require('./routes/busses');
@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/API', indexRouter);
+app.use('/API', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/API/users', usersRouter);
 app.use('/API/activities', activitiesRouter);
 app.use('/API/busses', bussesRouter);
