@@ -229,9 +229,8 @@ router.post("/id/:workdayId/comments", auth, function (req, res, next) {
 /* DELETE comment */
 router.delete("/id/:workdayId/comments/:commentId", auth, function (req, res, next) {
     // Check permissions
-    if (!req.user.admin) {
+    if (!req.user.admin)
         if (req.user._id !== req.comment.client._id.toString()) return res.status(401).end();
-    }
 
     req.workday.comments.pull(req.params.commentId);
     req.workday.save(function (err) {

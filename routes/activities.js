@@ -86,7 +86,7 @@ router.get("/units/", auth, function(req, res, next) {
 });
 
 /* GET activityUnit by id */
-router.param("activityUnitId", auth, function (req, res, next, id) {
+router.param("activityUnitId", function (req, res, next, id) {
     let query = ActivityUnit.findById(id)
         .populate(['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }]);
     query.exec(function (err, activityUnit) {
