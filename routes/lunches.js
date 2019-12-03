@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
+var array = require('lodash/array');
 let LunchUnit = mongoose.model("LunchUnit");
+let Workday = mongoose.model("Workday");
+let WorkdayTemplate = mongoose.model("WorkdayTemplate");
 let jwt = require('express-jwt');
 
 let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
