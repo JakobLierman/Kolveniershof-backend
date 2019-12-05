@@ -121,10 +121,8 @@ router.delete("/units/id/:busUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.busUnit.remove(function (err) {
-        if (err) return next(err);
-        res.send(true);
-    });
+    deleteUnit(req, res, next, req.busUnit, false);
+
 });
 
 /* DELETE busUnit from workday/workdayTemplate */
@@ -162,7 +160,7 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
                     return workdayDel._id.toString() === updatedWorkday._id.toString();
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
+                deleteUnit(req, res, next, req.busUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
             });
         });
     } else if (req.body.workdayTemplateId) {
@@ -182,21 +180,9 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
                     return workdayTemplateDel._id.toString() === updatedWorkdayTemplate._id.toString()
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
+                deleteUnit(req, res, next, req.busUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
             });
         });
-    }
-
-    // Delete unit
-    function deleteUnit(hasUsages) {
-        if (!hasUsages) {
-            req.busUnit.remove(function (err) {
-                if (err) return next(err);
-                res.send(true);
-            });
-        } else {
-            res.send(true);
-        }
     }
 });
 
@@ -217,5 +203,17 @@ router.patch("/units/id/:busUnitId/force", auth, function (req, res, next) {
         res.json(busUnit);
     });
 });
+
+// Delete unit
+function deleteUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        unit.remove(function (err) {
+            if (err) return next(err);
+            res.send(true);
+        });
+    } else {
+        res.send(true);
+    }
+}
 
 module.exports = router;
