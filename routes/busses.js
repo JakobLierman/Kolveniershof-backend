@@ -196,7 +196,70 @@ router.patch("/units/id/:busUnitId/force", auth, function (req, res, next) {
 
 /* PATCH busUnit from (within) workday/workdayTemplate */
 router.patch("/units/id/:busUnitId", auth, async function (req, res, next) {
-    // TODO
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Check if all required fields are filled in
+    if (!req.body.workdayId && !req.body.workdayTemplateId)
+        return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
+
+    // Find all elements with usages
+    let workdaysWithUsage = await Workday.find({
+        $or: [{ morningBusses: req.busUnit }, { eveningBusses: req.busUnit }]
+    }).lean();
+    let workdayTemplatesWithUsage = await WorkdayTemplate.find({
+        $or: [{ morningBusses: req.busUnit }, { eveningBusses: req.busUnit }]
+    }).lean();
+
+    // Patch unit, return unit if new one is made
+    let newUnit = await patchUnit(req, res, next, req.busUnit,
+        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
+    // Replace unit in workday
+    if (req.body.workdayId) {
+        Workday.findById(req.body.workdayId, (err, workday) => {
+            if (err) return next(err);
+            if (!workday) return next(new Error("No workday found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workday.morningBusses, req.busUnit._id);
+            let pmIndex = array.findIndex(workday.eveningBusses, req.busUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workday.morningBusses.splice(amIndex, 1, newUnit);
+                workday.markModified("morningBusses");
+            }
+            if (pmIndex !== -1) {
+                workday.eveningBusses.splice(pmIndex, 1, newUnit);
+                workday.markModified("eveningBusses");
+            }
+            // Save workday
+            workday.save(function (err, workday) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    } else if (req.body.workdayTemplateId) {
+        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
+            if (err) return next(err);
+            if (!workdayTemplate) return next(new Error("No workday template found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workdayTemplate.morningBusses, req.busUnit._id);
+            let pmIndex = array.findIndex(workdayTemplate.eveningBusses, req.busUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workdayTemplate.morningBusses.splice(amIndex, 1, newUnit);
+                workdayTemplate.markModified("morningBusses");
+            }
+            if (pmIndex !== -1) {
+                workdayTemplate.eveningBusses.splice(pmIndex, 1, newUnit);
+                workdayTemplate.markModified("eveningBusses");
+            }
+            // Save workdayTemplate
+            workdayTemplate.save(function (err, workdayTemplate) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    }
 });
 
 // Delete unit
@@ -236,10 +299,7 @@ function patchUnit(req, res, next, unit, hasUsages) {
             mentors: req.body.mentors ? req.body.mentors : unit.mentors,
             clients: req.body.clients ? req.body.clients : unit.clients
         });
-        newUnit.save(function (err, busUnit) {
-            if (err) return next(err);
-            return busUnit;
-        });
+        return newUnit.save();
     }
 }
 

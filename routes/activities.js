@@ -214,9 +214,7 @@ router.patch("/units/id/:activityUnitId", auth, async function (req, res, next) 
     // Patch unit, return unit if new one is made
     let newUnit = await patchUnit(req, res, next, req.activityUnit,
         (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
-    console.warn(newUnit); // TODO - check if await works
-
-    // TODO - Replace unit in workday
+    // Replace unit in workday
     if (req.body.workdayId) {
         Workday.findById(req.body.workdayId, (err, workday) => {
             if (err) return next(err);
@@ -277,7 +275,7 @@ function deleteUnit(req, res, next, unit, hasUsages) {
 }
 
 // Patch unit
-async function patchUnit(req, res, next, unit, hasUsages) {
+function patchUnit(req, res, next, unit, hasUsages) {
     if (!hasUsages) {
         if (req.body.activity) {
             unit.activity = req.body.activity;
@@ -301,10 +299,7 @@ async function patchUnit(req, res, next, unit, hasUsages) {
             mentors: req.body.mentors ? req.body.mentors : unit.mentors,
             clients: req.body.clients ? req.body.clients : unit.clients
         });
-        await newUnit.save(function (err, activityUnit) {
-            if (err) return next(err);
-            return activityUnit;
-        });
+        return newUnit.save();
     }
 }
 

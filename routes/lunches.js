@@ -113,7 +113,48 @@ router.patch("/units/id/:lunchUnitId/force", auth, function (req, res, next) {
 
 /* PATCH lunchUnit from (within) workday/workdayTemplate */
 router.patch("/units/id/:lunchUnitId", auth, async function (req, res, next) {
-    // TODO
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Check if all required fields are filled in
+    if (!req.body.workdayId && !req.body.workdayTemplateId)
+        return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
+
+    // Find all elements with usages
+    let workdaysWithUsage = await Workday.find({ lunch: req.lunchUnit }).lean();
+    let workdayTemplatesWithUsage = await WorkdayTemplate.find({ lunch: req.lunchUnit }).lean();
+
+    // Patch unit, return unit if new one is made
+    let newUnit = await patchUnit(req, res, next, req.lunchUnit,
+        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
+    // Replace unit in workday
+    if (req.body.workdayId) {
+        Workday.findById(req.body.workdayId, (err, workday) => {
+            if (err) return next(err);
+            if (!workday) return next(new Error("No workday found"));
+            // Replace unit
+            workday.lunch = newUnit;
+            workday.markModified("lunch");
+            // Save workday
+            workday.save(function (err, workday) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    } else if (req.body.workdayTemplateId) {
+        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
+            if (err) return next(err);
+            if (!workdayTemplate) return next(new Error("No workday template found"));
+            // Replace unit
+            workdayTemplate.lunch = newUnit;
+            workdayTemplate.markModified("lunch");
+            // Save workdayTemplate
+            workdayTemplate.save(function (err, workdayTemplate) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    }
 });
 
 // Delete unit
@@ -153,10 +194,7 @@ function patchUnit(req, res, next, unit, hasUsages) {
             mentors: req.body.mentors ? req.body.mentors : unit.mentors,
             clients: req.body.clients ? req.body.clients : unit.clients
         });
-        newUnit.save(function (err, lunchUnit) {
-            if (err) return next(err);
-            return lunchUnit;
-        });
+        return newUnit.save();
     }
 }
 
