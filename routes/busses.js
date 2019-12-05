@@ -201,7 +201,7 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
 });
 
 /* PATCH busUnit */
-router.patch("/units/id/:busUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:busUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

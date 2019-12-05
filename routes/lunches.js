@@ -119,7 +119,7 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
 });
 
 /* PATCH lunchUnit */
-router.patch("/units/id/:lunchUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:lunchUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 

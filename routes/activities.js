@@ -201,7 +201,7 @@ router.delete("/units/id/:activityUnitId", auth, async function (req, res, next)
 });
 
 /* PATCH activityUnit */
-router.patch("/units/id/:activityUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:activityUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
