@@ -108,17 +108,7 @@ router.patch("/units/id/:lunchUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let lunchUnit = req.lunchUnit;
-    if (req.body.lunch)
-        lunchUnit.lunch = req.body.lunch;
-    if (req.body.mentors)
-        lunchUnit.mentors = req.body.mentors;
-    if (req.body.clients)
-        lunchUnit.clients = req.body.clients;
-    lunchUnit.save(function (err, lunchUnit) {
-        if (err) return next(err);
-        res.json(lunchUnit);
-    });
+    patchUnit(req, res, next, req.lunchUnit, false);
 });
 
 // Delete unit
@@ -130,6 +120,38 @@ function deleteUnit(req, res, next, unit, hasUsages) {
         });
     } else {
         res.send(true);
+    }
+}
+
+// Patch unit
+function patchUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        if (req.body.lunch) {
+            unit.lunch = req.body.lunch;
+            unit.markModified("lunch");
+        }
+        if (req.body.mentors) {
+            unit.mentors = req.body.mentors;
+            unit.markModified("mentors");
+        }
+        if (req.body.clients) {
+            unit.clients = req.body.clients;
+            unit.markModified("clients");
+        }
+        unit.save(function (err, lunchUnit) {
+            if (err) return next(err);
+            res.json(lunchUnit);
+        });
+    } else {
+        let newUnit = new LunchUnit({
+            lunch: req.body.lunch ? req.body.lunch : unit.lunch,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+        newUnit.save(function (err, lunchUnit) {
+            if (err) return next(err);
+            return lunchUnit;
+        });
     }
 }
 

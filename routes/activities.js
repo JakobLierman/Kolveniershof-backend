@@ -191,17 +191,7 @@ router.patch("/units/id/:activityUnitId/force", auth, function (req, res, next) 
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let activityUnit = req.body.activityUnit;
-    if (req.body.activity)
-        activityUnit.activity = req.body.activity;
-    if (req.body.mentors)
-        activityUnit.mentors = req.body.mentors;
-    if (req.body.clients)
-        activityUnit.clients = req.body.clients;
-    activityUnit.save(function (err, activityUnit) {
-        if (err) return next(err);
-        res.json(activityUnit);
-    });
+    patchUnit(req, res, next, req.activityUnit, false)
 });
 
 // Delete unit
@@ -213,6 +203,38 @@ function deleteUnit(req, res, next, unit, hasUsages) {
         });
     } else {
         res.send(true);
+    }
+}
+
+// Patch unit
+function patchUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        if (req.body.activity) {
+            unit.activity = req.body.activity;
+            unit.markModified("bus");
+        }
+        if (req.body.mentors) {
+            unit.mentors = req.body.mentors;
+            unit.markModified("mentors");
+        }
+        if (req.body.clients) {
+            unit.clients = req.body.clients;
+            unit.markModified("clients");
+        }
+        unit.save(function (err, activityUnit) {
+            if (err) return next(err);
+            res.json(activityUnit);
+        });
+    } else {
+        let newUnit = new ActivityUnit({
+            activity: req.body.activity ? req.body.activity : unit.activity,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+        newUnit.save(function (err, activityUnit) {
+            if (err) return next(err);
+            return activityUnit;
+        });
     }
 }
 
