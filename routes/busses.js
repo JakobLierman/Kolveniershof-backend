@@ -194,6 +194,11 @@ router.patch("/units/id/:busUnitId/force", auth, function (req, res, next) {
     patchUnit(req, res, next, req.busUnit, false)
 });
 
+/* PATCH busUnit from (within) workday/workdayTemplate */
+router.patch("/units/id/:busUnitId", auth, async function (req, res, next) {
+    // TODO
+});
+
 // Delete unit
 function deleteUnit(req, res, next, unit, hasUsages) {
     if (!hasUsages) {

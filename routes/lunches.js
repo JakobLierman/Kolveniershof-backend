@@ -111,6 +111,11 @@ router.patch("/units/id/:lunchUnitId/force", auth, function (req, res, next) {
     patchUnit(req, res, next, req.lunchUnit, false);
 });
 
+/* PATCH lunchUnit from (within) workday/workdayTemplate */
+router.patch("/units/id/:lunchUnitId", auth, async function (req, res, next) {
+    // TODO
+});
+
 // Delete unit
 function deleteUnit(req, res, next, unit, hasUsages) {
     if (!hasUsages) {
