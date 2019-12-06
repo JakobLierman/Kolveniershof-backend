@@ -121,10 +121,8 @@ router.delete("/units/id/:busUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.busUnit.remove(function (err) {
-        if (err) return next(err);
-        res.send(true);
-    });
+    deleteUnit(req, res, next, req.busUnit, false);
+
 });
 
 /* DELETE busUnit from workday/workdayTemplate */
@@ -162,7 +160,7 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
                     return workdayDel._id.toString() === updatedWorkday._id.toString();
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
+                deleteUnit(req, res, next, req.busUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
             });
         });
     } else if (req.body.workdayTemplateId) {
@@ -182,40 +180,127 @@ router.delete("/units/id/:busUnitId", auth, async function (req, res, next) {
                     return workdayTemplateDel._id.toString() === updatedWorkdayTemplate._id.toString()
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
+                deleteUnit(req, res, next, req.busUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
             });
         });
-    }
-
-    // Delete unit
-    function deleteUnit(hasUsages) {
-        if (!hasUsages) {
-            req.busUnit.remove(function (err) {
-                if (err) return next(err);
-                res.send(true);
-            });
-        } else {
-            res.send(true);
-        }
     }
 });
 
 /* PATCH busUnit */
-router.patch("/units/id/:busUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:busUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let busUnit = req.body.busUnit;
-    if (req.body.bus)
-        busUnit.bus = req.body.bus;
-    if (req.body.mentors)
-        busUnit.mentors = req.body.mentors;
-    if (req.body.clients)
-        busUnit.clients = req.body.clients;
-    busUnit.save(function (err, busUnit) {
-        if (err) return next(err);
-        res.json(busUnit);
-    });
+    patchUnit(req, res, next, req.busUnit, false)
 });
+
+/* PATCH busUnit from (within) workday/workdayTemplate */
+router.patch("/units/id/:busUnitId", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Check if all required fields are filled in
+    if (!req.body.workdayId && !req.body.workdayTemplateId)
+        return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
+
+    // Find all elements with usages
+    let workdaysWithUsage = await Workday.find({
+        $or: [{ morningBusses: req.busUnit }, { eveningBusses: req.busUnit }]
+    }).lean();
+    let workdayTemplatesWithUsage = await WorkdayTemplate.find({
+        $or: [{ morningBusses: req.busUnit }, { eveningBusses: req.busUnit }]
+    }).lean();
+
+    // Patch unit, return unit if new one is made
+    let newUnit = await patchUnit(req, res, next, req.busUnit,
+        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
+    // Replace unit in workday
+    if (req.body.workdayId) {
+        Workday.findById(req.body.workdayId, (err, workday) => {
+            if (err) return next(err);
+            if (!workday) return next(new Error("No workday found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workday.morningBusses, req.busUnit._id);
+            let pmIndex = array.findIndex(workday.eveningBusses, req.busUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workday.morningBusses.splice(amIndex, 1, newUnit);
+                workday.markModified("morningBusses");
+            }
+            if (pmIndex !== -1) {
+                workday.eveningBusses.splice(pmIndex, 1, newUnit);
+                workday.markModified("eveningBusses");
+            }
+            // Save workday
+            workday.save(function (err, workday) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    } else if (req.body.workdayTemplateId) {
+        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
+            if (err) return next(err);
+            if (!workdayTemplate) return next(new Error("No workday template found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workdayTemplate.morningBusses, req.busUnit._id);
+            let pmIndex = array.findIndex(workdayTemplate.eveningBusses, req.busUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workdayTemplate.morningBusses.splice(amIndex, 1, newUnit);
+                workdayTemplate.markModified("morningBusses");
+            }
+            if (pmIndex !== -1) {
+                workdayTemplate.eveningBusses.splice(pmIndex, 1, newUnit);
+                workdayTemplate.markModified("eveningBusses");
+            }
+            // Save workdayTemplate
+            workdayTemplate.save(function (err, workdayTemplate) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    }
+});
+
+// Delete unit
+function deleteUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        unit.remove(function (err) {
+            if (err) return next(err);
+            res.send(true);
+        });
+    } else {
+        res.send(true);
+    }
+}
+
+// Patch unit
+function patchUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        if (req.body.bus) {
+            unit.bus = req.body.bus;
+            unit.markModified("bus");
+        }
+        if (req.body.mentors) {
+            unit.mentors = req.body.mentors;
+            unit.markModified("mentors");
+        }
+        if (req.body.clients) {
+            unit.clients = req.body.clients;
+            unit.markModified("clients");
+        }
+        unit.save(function (err, busUnit) {
+            if (err) return next(err);
+            res.json(busUnit);
+        });
+    } else {
+        let newUnit = new BusUnit({
+            bus: req.body.bus ? req.body.bus : unit.bus,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+        return newUnit.save();
+    }
+}
 
 module.exports = router;

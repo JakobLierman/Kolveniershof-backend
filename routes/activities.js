@@ -121,10 +121,8 @@ router.delete("/units/id/:activityUnitId/force", auth, function (req, res, next)
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.activityUnit.remove(function (err) {
-        if (err) return next(err);
-        res.send(true);
-    });
+    deleteUnit(req, res, next, req.activityUnit, false);
+
 });
 
 /* DELETE activityUnit from workday/workdayTemplate */
@@ -162,7 +160,7 @@ router.delete("/units/id/:activityUnitId", auth, async function (req, res, next)
                     return workdayDel._id.toString() === updatedWorkday._id.toString();
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
+                deleteUnit(req, res, next, req.activityUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1)
             });
         });
     } else if (req.body.workdayTemplateId) {
@@ -182,40 +180,127 @@ router.delete("/units/id/:activityUnitId", auth, async function (req, res, next)
                     return workdayTemplateDel._id.toString() === updatedWorkdayTemplate._id.toString()
                 });
                 // Delete based on more than one usage
-                deleteUnit((workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
+                deleteUnit(req, res, next, req.activityUnit, (workdaysWithUsage.length + workdayTemplatesWithUsage.length) >= 1);
             });
         });
-    }
-
-    // Delete unit
-    function deleteUnit(hasUsages) {
-        if (!hasUsages) {
-            req.activityUnit.remove(function (err) {
-                if (err) return next(err);
-                res.send(true);
-            });
-        } else {
-            res.send(true);
-        }
     }
 });
 
 /* PATCH activityUnit */
-router.patch("/units/id/:activityUnitId", auth, function (req, res, next) {
+router.patch("/units/id/:activityUnitId/force", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let activityUnit = req.body.activityUnit;
-    if (req.body.activity)
-        activityUnit.activity = req.body.activity;
-    if (req.body.mentors)
-        activityUnit.mentors = req.body.mentors;
-    if (req.body.clients)
-        activityUnit.clients = req.body.clients;
-    activityUnit.save(function (err, activityUnit) {
-        if (err) return next(err);
-        res.json(activityUnit);
-    });
+    patchUnit(req, res, next, req.activityUnit, false)
 });
+
+/* PATCH activityUnit from (within) workday/workdayTemplate */
+router.patch("/units/id/:activityUnitId", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Check if all required fields are filled in
+    if (!req.body.workdayId && !req.body.workdayTemplateId)
+        return res.status(400).send("Gelieve alle velden in te vullen."); // TODO - i18n
+
+    // Find all elements with usages
+    let workdaysWithUsage = await Workday.find({
+        $or: [{ amActivities: req.activityUnit }, { pmActivities: req.activityUnit }]
+    }).lean();
+    let workdayTemplatesWithUsage = await WorkdayTemplate.find({
+        $or: [{ amActivities: req.activityUnit }, { pmActivities: req.activityUnit }]
+    }).lean();
+
+    // Patch unit, return unit if new one is made
+    let newUnit = await patchUnit(req, res, next, req.activityUnit,
+        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
+    // Replace unit in workday
+    if (req.body.workdayId) {
+        Workday.findById(req.body.workdayId, (err, workday) => {
+            if (err) return next(err);
+            if (!workday) return next(new Error("No workday found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workday.amActivities, req.activityUnit._id);
+            let pmIndex = array.findIndex(workday.pmActivities, req.activityUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workday.amActivities.splice(amIndex, 1, newUnit);
+                workday.markModified("amActivities");
+            }
+            if (pmIndex !== -1) {
+                workday.pmActivities.splice(pmIndex, 1, newUnit);
+                workday.markModified("pmActivities");
+            }
+            // Save workday
+            workday.save(function (err, workday) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    } else if (req.body.workdayTemplateId) {
+        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
+            if (err) return next(err);
+            if (!workdayTemplate) return next(new Error("No workday template found"));
+            // Find index for unit
+            let amIndex = array.findIndex(workdayTemplate.amActivities, req.activityUnit._id);
+            let pmIndex = array.findIndex(workdayTemplate.pmActivities, req.activityUnit._id);
+            // Replace unit
+            if (amIndex !== -1) {
+                workdayTemplate.amActivities.splice(amIndex, 1, newUnit);
+                workdayTemplate.markModified("amActivities");
+            }
+            if (pmIndex !== -1) {
+                workdayTemplate.pmActivities.splice(pmIndex, 1, newUnit);
+                workdayTemplate.markModified("pmActivities");
+            }
+            // Save workdayTemplate
+            workdayTemplate.save(function (err, workdayTemplate) {
+                if (err) return next(err);
+                res.json(newUnit);
+            });
+        });
+    }
+});
+
+// Delete unit
+function deleteUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        unit.remove(function (err) {
+            if (err) return next(err);
+            res.send(true);
+        });
+    } else {
+        res.send(true);
+    }
+}
+
+// Patch unit
+function patchUnit(req, res, next, unit, hasUsages) {
+    if (!hasUsages) {
+        if (req.body.activity) {
+            unit.activity = req.body.activity;
+            unit.markModified("bus");
+        }
+        if (req.body.mentors) {
+            unit.mentors = req.body.mentors;
+            unit.markModified("mentors");
+        }
+        if (req.body.clients) {
+            unit.clients = req.body.clients;
+            unit.markModified("clients");
+        }
+        unit.save(function (err, activityUnit) {
+            if (err) return next(err);
+            res.json(activityUnit);
+        });
+    } else {
+        let newUnit = new ActivityUnit({
+            activity: req.body.activity ? req.body.activity : unit.activity,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+        return newUnit.save();
+    }
+}
 
 module.exports = router;
