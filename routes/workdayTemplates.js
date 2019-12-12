@@ -127,7 +127,8 @@ router.post("/", auth, function (req, res, next) {
         amActivities: req.body.amActivities,
         lunch: req.body.lunch,
         pmActivities: req.body.pmActivities,
-        eveningBusses: req.body.eveningBusses
+        eveningBusses: req.body.eveningBusses,
+        holiday: req.body.holiday
     });
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
@@ -192,6 +193,8 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
         workdayTemplate.pmActivities = req.body.pmActivities;
     if (req.body.eveningBusses)
         workdayTemplate.eveningBusses = req.body.eveningBusses;
+    if (workdayTemplate.holiday !== req.body.holiday)
+        workdayTemplate.holiday = req.body.holiday;
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
         res.json(workdayTemplate);
