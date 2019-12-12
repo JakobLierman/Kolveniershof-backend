@@ -348,7 +348,7 @@ db.busunits.insertMany([
 
 // WorkdayTemplates
 db.workdaytemplates.insertMany([
-    { weekNumber: 1, dayNumber: 1, 
+    { templateName: "Template 1", weekNumber: 1, dayNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -365,7 +365,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 1, dayNumber: 2, 
+    { templateName: "Template 1", weekNumber: 1, dayNumber: 2, 
         daycareMentors: [
             db.users.findOne({ email: "mentor4@gmail.com" })._id,
             db.users.findOne({ email: "mentor5@gmail.com" })._id
@@ -387,7 +387,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 1, dayNumber: 3, 
+    { templateName: "Template 1", weekNumber: 1, dayNumber: 3, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -406,7 +406,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 1, dayNumber: 4, 
+    { templateName: "Template 1", weekNumber: 1, dayNumber: 4, 
         daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -424,7 +424,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 1, dayNumber: 5, 
+    { templateName: "Template 1", weekNumber: 1, dayNumber: 5, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -441,7 +441,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 2, dayNumber: 1, 
+    { templateName: "Template 1", weekNumber: 2, dayNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
@@ -456,7 +456,7 @@ db.workdaytemplates.insertMany([
         eveningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 2, dayNumber: 2, 
+    { templateName: "Template 1", weekNumber: 2, dayNumber: 2, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
@@ -471,7 +471,7 @@ db.workdaytemplates.insertMany([
         eveningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 2, dayNumber: 3, 
+    { templateName: "Template 1", weekNumber: 2, dayNumber: 3, 
         daycareMentors: [db.users.findOne({ email: "mentor2@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -489,7 +489,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 2, dayNumber: 4, 
+    { templateName: "Template 1", weekNumber: 2, dayNumber: 4, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
@@ -506,7 +506,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 2, dayNumber: 5, 
+    { templateName: "Template 1", weekNumber: 2, dayNumber: 5, 
         daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -523,7 +523,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 3, dayNumber: 1, 
+    { templateName: "Template 1", weekNumber: 3, dayNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
@@ -539,7 +539,7 @@ db.workdaytemplates.insertMany([
         eveningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 3, dayNumber: 2, 
+    { templateName: "Template 1", weekNumber: 3, dayNumber: 2, 
         daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -556,7 +556,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 3, dayNumber: 3, 
+    { templateName: "Template 1", weekNumber: 3, dayNumber: 3, 
         daycareMentors: [db.users.findOne({ email: "mentor2@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
@@ -571,7 +571,7 @@ db.workdaytemplates.insertMany([
         eveningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 3, dayNumber: 4, 
+    { templateName: "Template 1", weekNumber: 3, dayNumber: 4, 
         daycareMentors: [db.users.findOne({ email: "mentor4@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -588,7 +588,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 3, dayNumber: 5, 
+    { templateName: "Template 1", weekNumber: 3, dayNumber: 5, 
         daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -606,7 +606,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 4, dayNumber: 1, 
+    { templateName: "Template 1", weekNumber: 4, dayNumber: 1, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -623,7 +623,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 4, dayNumber: 2, 
+    { templateName: "Template 1", weekNumber: 4, dayNumber: 2, 
         daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -640,7 +640,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 4, dayNumber: 3, 
+    { templateName: "Template 1", weekNumber: 4, dayNumber: 3, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -657,7 +657,7 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
         ] },
-    { weekNumber: 4, dayNumber: 4, 
+    { templateName: "Template 1", weekNumber: 4, dayNumber: 4, 
         daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
@@ -674,7 +674,351 @@ db.workdaytemplates.insertMany([
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
         ] },
-    { weekNumber: 4, dayNumber: 5, 
+    { templateName: "Template 1", weekNumber: 4, dayNumber: 5, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Spik en span" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Lasagne" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 1, dayNumber: 1, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ],
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Weekschema" })._id })._id,
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Lasagne" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Markt" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 1, dayNumber: 2, 
+        daycareMentors: [
+            db.users.findOne({ email: "mentor4@gmail.com" })._id,
+            db.users.findOne({ email: "mentor5@gmail.com" })._id
+        ], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Sfeergroep" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Spaghetti bolognese" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Spik en span" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Feest" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 1, dayNumber: 3, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Werkplaats" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Fishsticks met purree en spinazie" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Spik en span" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 1, dayNumber: 4, 
+        daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Sfeergroep" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Vol-au-vent met frietjes" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Werkplaats" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 1, dayNumber: 5, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id,
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Worst met aardappelen en doperwten" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 2, dayNumber: 1, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Weekschema" })._id })._id,
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Kip met rijst en ananas" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Sfeergroep" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 2, dayNumber: 2, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Markt" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Boomstammetje met aardappelen en wortels" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 2, dayNumber: 3, 
+        daycareMentors: [db.users.findOne({ email: "mentor2@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Kabeljauw met preipurree" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Spik en span" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 2, dayNumber: 4, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Werkplaats" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Lasagne" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Feest" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 2, dayNumber: 5, 
+        daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Vol-au-vent met frietjes" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Sfeergroep" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 3, dayNumber: 1, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Weekschema" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Spaghetti bolognese" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Werkplaats" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 3, dayNumber: 2, 
+        daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Praatcafé" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Stoofvlees met gebakken aardappelen" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 3, dayNumber: 3, 
+        daycareMentors: [db.users.findOne({ email: "mentor2@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Kaarsenatelier" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Fishsticks met purree en spinazie" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Markt" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 3, dayNumber: 4, 
+        daycareMentors: [db.users.findOne({ email: "mentor4@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Feest" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Worst met aardappelen en doperwten" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Spik en span" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 3, dayNumber: 5, 
+        daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Kip met rijst en ananas" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id,
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Feest" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 4, dayNumber: 1, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Weekschema" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Boomstammetje met aardappelen en wortels" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 4, dayNumber: 2, 
+        daycareMentors: [db.users.findOne({ email: "mentor3@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Kaarsenatelier" })._id })._id,
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Kabeljauw met preipurree" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Bib" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 4, dayNumber: 3, 
+        daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Werkplaats" })._id })._id
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Spaghetti bolognese" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Feest" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Beige" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 4, dayNumber: 4, 
+        daycareMentors: [db.users.findOne({ email: "mentor1@gmail.com" })._id], 
+        morningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ], 
+        amActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Beleving" })._id })._id,
+        ],
+        lunch: db.lunchunits.findOne({ lunch: "Stoofvlees met gebakken aardappelen" })._id,
+        pmActivities: [
+            db.activityunits.findOne({ activity: db.activities.findOne({ name: "Markt" })._id })._id
+        ],
+        eveningBusses: [
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
+            db.busunits.findOne({ bus: db.busses.findOne({ name: "Blauw" })._id })._id
+        ] },
+    { templateName: "Template kopie", weekNumber: 4, dayNumber: 5, 
         daycareMentors: [db.users.findOne({ email: "mentor5@gmail.com" })._id], 
         morningBusses: [
             db.busunits.findOne({ bus: db.busses.findOne({ name: "Geel" })._id })._id,
