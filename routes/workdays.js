@@ -179,7 +179,7 @@ router.patch("/id/:workdayId", auth, function (req, res, next) {
         workday.lunch = req.body.lunch;
     if (req.body.pmActivities)
         workday.pmActivities = req.body.pmActivities;
-    if (req.body.holiday)
+    if (workday.holiday !== req.body.holiday)
         workday.holiday = req.body.holiday;
     workday.save(function (err, workday) {
         if (err) return next(err);

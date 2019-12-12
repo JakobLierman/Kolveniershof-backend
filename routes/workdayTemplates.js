@@ -127,7 +127,8 @@ router.post("/", auth, function (req, res, next) {
         amActivities: req.body.amActivities,
         lunch: req.body.lunch,
         pmActivities: req.body.pmActivities,
-        eveningBusses: req.body.eveningBusses
+        eveningBusses: req.body.eveningBusses,
+        holiday: req.body.holiday
     });
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
@@ -135,12 +136,34 @@ router.post("/", auth, function (req, res, next) {
     });
 });
 
+/* Create workday templates with name */
+router.post("/name", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Create 4 weeks
+    for (let week = 1; week < 5; week++) {
+        // Create 5 days
+        for (let day = 1; day < 6; day++) {
+            // Create template
+            let template = new WorkdayTemplate({
+                templateName: req.body,
+                weekNumber: week,
+                dayNumber: day
+            });
+            // Save template
+            await template.save(function (err) { if (err) return next(err); });
+        }
+    }
+    res.json(true);
+});
+
 /* DELETE workday template */
 router.delete("/id/:workdayTemplateId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.workday.remove(function (err) {
+    req.workdayTemplate.remove(function (err) {
         if (err) return next(err);
         res.send(true);
     });
@@ -169,11 +192,26 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     if (req.body.pmActivities)
         workdayTemplate.pmActivities = req.body.pmActivities;
     if (req.body.eveningBusses)
-        workdayTemplate.eveningBusses = req.body.eveningBusses
+        workdayTemplate.eveningBusses = req.body.eveningBusses;
+    if (workdayTemplate.holiday !== req.body.holiday)
+        workdayTemplate.holiday = req.body.holiday;
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
         res.json(workdayTemplate);
     });
+});
+
+/* PATCH template name */
+router.patch("/name/:name", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // TODO - Change all workdays
+    for (const template of req.workdayTemplates) {
+        template.templateName = req.body;
+        await template.save(function (err) { if (err) return next(err); });
+    }
+    res.json(true);
 });
 
 /* Create week from template week */
