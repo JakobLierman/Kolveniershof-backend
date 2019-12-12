@@ -135,6 +135,19 @@ router.post("/", auth, function (req, res, next) {
     });
 });
 
+/* DELETE workday templates with name */
+router.delete("/name/:name", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    for (const template of req.workdayTemplates) {
+        await template.remove(function (err) {
+            if (err) return next(err);
+        });
+    }
+    res.send(true);
+});
+
 /* DELETE workday template */
 router.delete("/id/:workdayTemplateId", auth, function (req, res, next) {
     // Check permissions
