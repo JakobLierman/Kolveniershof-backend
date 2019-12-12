@@ -140,7 +140,7 @@ router.delete("/id/:workdayTemplateId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    req.workday.remove(function (err) {
+    req.workdayTemplate.remove(function (err) {
         if (err) return next(err);
         res.send(true);
     });
@@ -169,7 +169,7 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     if (req.body.pmActivities)
         workdayTemplate.pmActivities = req.body.pmActivities;
     if (req.body.eveningBusses)
-        workdayTemplate.eveningBusses = req.body.eveningBusses
+        workdayTemplate.eveningBusses = req.body.eveningBusses;
     workdayTemplate.save(function (err, workdayTemplate) {
         if (err) return next(err);
         res.json(workdayTemplate);
