@@ -198,6 +198,19 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
     });
 });
 
+/* PATCH template name */
+router.patch("/name/:name", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // TODO - Change all workdays
+    for (const template of req.workdayTemplates) {
+        template.templateName = req.body;
+        await template.save(function (err) { if (err) return next(err); });
+    }
+    res.json(true);
+});
+
 /* Create week from template week */
 router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, res, next) {
     // Check permissions
