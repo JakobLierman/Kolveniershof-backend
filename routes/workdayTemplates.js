@@ -135,6 +135,28 @@ router.post("/", auth, function (req, res, next) {
     });
 });
 
+/* Create workday templates with name */
+router.post("/name", auth, async function (req, res, next) {
+    // Check permissions
+    if (!req.user.admin) return res.status(401).end();
+
+    // Create 4 weeks
+    for (let week = 1; week < 5; week++) {
+        // Create 5 days
+        for (let day = 1; day < 6; day++) {
+            // Create template
+            let template = new WorkdayTemplate({
+                templateName: req.body,
+                weekNumber: week,
+                dayNumber: day
+            });
+            // Save template
+            await template.save(function (err) { if (err) return next(err); });
+        }
+    }
+    res.json(true);
+});
+
 /* DELETE workday template */
 router.delete("/id/:workdayTemplateId", auth, function (req, res, next) {
     // Check permissions
