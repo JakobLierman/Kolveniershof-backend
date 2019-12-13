@@ -328,7 +328,10 @@ function createClientWorkdayByWorkday(workday, userId) {
             clientWorkday.amActivities.push(amActivity);
     });
     // Add lunch
-    clientWorkday.lunch = workday.lunch;
+    let userIds = [];
+    workday.lunch.clients.forEach((client) => userIds.push(client._id.toString()));
+    if (userIds.includes(userId))
+        clientWorkday.lunch = workday.lunch;
     // Add pmActivity
     workday.pmActivities.forEach((pmActivity) => {
         let userIds = [];
