@@ -27,7 +27,8 @@ let WorkdayTemplateSchema = new mongoose.Schema({
     eveningBusses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BusUnit'
-    }]
+    }],
+    holiday: { type: Boolean, required: true, default: false }
 });
 // Define unique compound index
 WorkdayTemplateSchema.index({ templateName: 1, weekNumber: 1, dayNumber: 1 }, { unique: true });
