@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 let mongoose = require('mongoose');
 let Workday = mongoose.model("Workday");
 let Comment = mongoose.model("Comment");
@@ -311,6 +311,8 @@ function getWeek(dateString) {
 function createClientWorkdayByWorkday(workday, userId) {
     let clientWorkday = new Workday();
 
+    // Add id
+    clientWorkday._id = workday._id;
     // Add date
     clientWorkday.date = workday.date;
     // Add morningBus
