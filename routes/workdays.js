@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 let mongoose = require('mongoose');
 let Workday = mongoose.model("Workday");
 let Comment = mongoose.model("Comment");
@@ -311,38 +311,39 @@ function getWeek(dateString) {
 function createClientWorkdayByWorkday(workday, userId) {
     let clientWorkday = new Workday();
 
+    // Add id
+    clientWorkday._id = workday._id;
     // Add date
     clientWorkday.date = workday.date;
     // Add morningBus
-    workday.morningBusses.forEach((morningBus) => {
-        let userIds = [];
-        morningBus.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(userId))
-            clientWorkday.morningBusses.push(morningBus);
-    });
+    workday.morningBusses.forEach(morningBus =>
+        morningBus.clients.forEach(client =>
+            (client._id.toString() === userId) ? clientWorkday.morningBusses.push(morningBus) : null
+        )
+    );
     // Add amActivity
-    workday.amActivities.forEach((amActivity) => {
-        let userIds = [];
-        amActivity.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(userId))
-            clientWorkday.amActivities.push(amActivity);
-    });
+    workday.amActivities.forEach(amActivity =>
+        amActivity.clients.forEach(client =>
+            (client._id.toString() === userId) ? clientWorkday.amActivities.push(amActivity) : null
+        )
+    );
     // Add lunch
     clientWorkday.lunch = workday.lunch;
+    workday.lunch.clients.forEach(client =>
+        clientWorkday.lunch = (client._id.toString() === userId) ? workday.lunch : null
+    );
     // Add pmActivity
-    workday.pmActivities.forEach((pmActivity) => {
-        let userIds = [];
-        pmActivity.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(userId))
-            clientWorkday.pmActivities.push(pmActivity);
-    });
+    workday.pmActivities.forEach(pmActivity =>
+        pmActivity.clients.forEach(client =>
+            (client._id.toString() === userId) ? clientWorkday.pmActivities.push(pmActivity) : null
+        )
+    );
     // Add eveningBus
-    workday.eveningBusses.forEach((eveningBus) => {
-        let userIds = [];
-        eveningBus.clients.forEach((client) => userIds.push(client._id.toString()));
-        if (userIds.includes(userId))
-            clientWorkday.eveningBusses.push(eveningBus);
-    });
+    workday.eveningBusses.forEach(eveningBus =>
+        eveningBus.clients.forEach(client =>
+            (client._id.toString() === userId) ? clientWorkday.eveningBusses.push(eveningBus) : null
+        )
+    );
     // Add holiday
     clientWorkday.holiday = workday.holiday;
     // Add comment
