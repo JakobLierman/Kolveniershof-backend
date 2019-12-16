@@ -15,6 +15,7 @@ let WorkdaySchema = new mongoose.Schema({
     date: { type: Date, required: true, unique: true },
     originalTemplateName: { type: String },
     originalWeekNumber: { type: Number, min: 1, max: 4 },
+    notes: { type: String },
     dayActivities: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ActivityUnit'
