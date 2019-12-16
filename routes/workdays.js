@@ -328,10 +328,10 @@ function createClientWorkdayByWorkday(workday, userId) {
         )
     );
     // Add lunch
-    clientWorkday.lunch = workday.lunch;
-    workday.lunch.clients.forEach(client =>
-        clientWorkday.lunch = (client._id.toString() === userId) ? workday.lunch : null
-    );
+    if (workday.lunch)
+        workday.lunch.clients.forEach(client =>
+            clientWorkday.lunch = (client._id.toString() === userId) ? workday.lunch : null
+        );
     // Add pmActivity
     workday.pmActivities.forEach(pmActivity =>
         pmActivity.clients.forEach(client =>
