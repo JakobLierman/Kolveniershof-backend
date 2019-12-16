@@ -106,6 +106,7 @@ router.post("/", auth, function (req, res, next) {
         date: req.body.date,
         originalTemplateName: req.body.originalTemplateName,
         originalWeekNumber: req.body.originalWeekNumber,
+        dayActivities: req.body.dayActivities,
         daycareMentors: req.body.daycareMentors,
         morningBusses: req.body.morningBusses,
         amActivities: req.body.amActivities,
@@ -169,6 +170,8 @@ router.patch("/id/:workdayId", auth, function (req, res, next) {
     if (!req.user.admin) return res.status(401).end();
 
     let workday = req.workday;
+    if (req.body.dayActivities)
+        workday.dayActivities = req.body.dayActivities;
     if (req.body.daycareMentors)
         workday.daycareMentors = req.body.daycareMentors;
     if (req.body.morningBusses)
@@ -263,6 +266,7 @@ router.patch("/id/:workdayId/comments/:commentId", auth, function (req, res, nex
 // Populate query
 function populateWorkdays(query) {
     query
+        .populate({ path: "dayActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "daycareMentors", select: '-salt -hash' })
         .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
@@ -315,6 +319,12 @@ function createClientWorkdayByWorkday(workday, userId) {
     clientWorkday._id = workday._id;
     // Add date
     clientWorkday.date = workday.date;
+    // Add dayActivity
+    workday.dayActivities.forEach(dayActivity =>
+        dayActivity.clients.forEach(client =>
+            (client._id.toString() === userId) ? clientWorkday.dayActivities.push(dayActivity) : null
+        )
+    );
     // Add morningBus
     workday.morningBusses.forEach(morningBus =>
         morningBus.clients.forEach(client =>
