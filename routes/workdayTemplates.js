@@ -116,6 +116,7 @@ router.post("/", auth, function (req, res, next) {
     let workdayTemplate = new WorkdayTemplate({
         weekNumber: req.body.weekNumber,
         dayNumber: req.body.dayNumber,
+        dayActivities: req.body.dayActivities,
         daycareMentors: req.body.daycareMentors,
         morningBusses: req.body.morningBusses,
         amActivities: req.body.amActivities,
@@ -188,6 +189,8 @@ router.patch("/id/:workdayTemplateId", auth, function (req, res, next) {
         workdayTemplate.weekNumber = req.body.weekNumber;
     if (req.body.dayNumber)
         workdayTemplate.dayNumber = req.body.dayNumber;
+    if (req.body.dayActivities)
+        workdayTemplate.dayActivities = req.body.dayActivities;
     if (req.body.daycareMentors)
         workdayTemplate.daycareMentors = req.body.daycareMentors;
     if (req.body.morningBusses)
@@ -213,7 +216,7 @@ router.patch("/name/:name", auth, async function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    // TODO - Change all workdays
+    // Change all workdays
     for (const template of req.workdayTemplates) {
         template.templateName = req.body;
         await template.save(function (err) { if (err) return next(err); });
@@ -272,6 +275,7 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
                                     date: date,
                                     originalTemplateName: template.templateName,
                                     originalWeekNumber: template.weekNumber,
+                                    dayActivities: template.dayActivities,
                                     daycareMentors: template.daycareMentors,
                                     morningBusses: template.morningBusses,
                                     amActivities: template.amActivities,
@@ -327,6 +331,7 @@ function getWeek(dateString) {
 // Populate query
 function populateWorkdayTemplates(query) {
     query
+        .populate({ path: "dayActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "daycareMentors", select: '-salt -hash' })
         .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
         .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })

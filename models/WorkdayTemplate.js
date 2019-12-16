@@ -4,6 +4,10 @@ let WorkdayTemplateSchema = new mongoose.Schema({
     templateName: { type: String, required: true },
     weekNumber: { type: Number, required: true, min: 1, max: 4 },
     dayNumber: { type: Number, required: true, min: 1, max: 5 },
+    dayActivities: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ActivityUnit'
+    }],
     daycareMentors: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
