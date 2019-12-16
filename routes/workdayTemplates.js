@@ -76,14 +76,11 @@ router.param("week", function (req, res, next, week) {
     if(!week.match(weekRegex))
         return res.status(400).json({ message: "Please insert a valid week number (1, 2, 3 or 4)." });
 
-    let query = WorkdayTemplate.find({ weekNumber: week });
-    populateWorkdayTemplates(query);
-    query.exec(function (err, workdayTemplates) {
-        if (err) return next(err);
-        if (!workdayTemplates) return next(new Error("No WorkdayTemplates found on week: " + week));
-        req.workdayTemplates = workdayTemplates;
-        return next();
-    });
+    let workdayTemplates = [];
+    req.workdayTemplates.forEach(template =>
+        template.weekNumber === parseInt(week) ? workdayTemplates.push(template) : null);
+    req.workdayTemplates = workdayTemplates;
+    return next();
 });
 router.get("/name/:name/:week", auth, function (req, res, next) {
     // Check permissions
@@ -98,14 +95,11 @@ router.param("day", function (req, res, next, day) {
     if(!day.match(dayRegex))
         return res.status(400).json({ message: "Please insert a valid day number (1, 2, 3, 4 or 5)." });
 
-    let query = WorkdayTemplate.findOne({ dayNumber: day });
-    populateWorkdayTemplates(query);
-    query.exec(function (err, workdayTemplate) {
-        if (err) return next(err);
-        if (!workdayTemplate) return next(new Error("No WorkdayTemplate found on day: " + day));
-        req.workdayTemplate = workdayTemplate;
-        return next();
-    });
+    let workdayTemplate = null;
+    req.workdayTemplates.forEach(template =>
+        template.dayNumber === parseInt(day) ? workdayTemplate = template : null);
+    req.workdayTemplate = workdayTemplate;
+    return next();
 });
 router.get("/name/:name/:week/:day", auth, function (req, res, next) {
     // Check permissions
