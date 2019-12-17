@@ -171,8 +171,7 @@ router.patch("/id/:workdayId", auth, function (req, res, next) {
     if (!req.user.admin) return res.status(401).end();
 
     let workday = req.workday;
-    if (req.body.notes)
-        workday.notes = req.body.notes;
+    workday.notes = req.body.notes;
     if (req.body.dayActivities)
         workday.dayActivities = req.body.dayActivities;
     if (req.body.daycareMentors)
