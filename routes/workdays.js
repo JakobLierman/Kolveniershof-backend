@@ -91,7 +91,8 @@ router.get("/week/:weekdate/:userId", auth, function (req, res, next) {
 
     let clientWorkdays = [];
     req.workdays.forEach(workday => {
-        clientWorkdays.push(createClientWorkdayByWorkday(workday, req.params.userId));
+        let clientWorkday = createClientWorkdayByWorkday(workday, req.params.userId);
+        clientWorkday ? clientWorkdays.push(clientWorkday) : null;
     });
 
     res.json(clientWorkdays);
@@ -316,53 +317,79 @@ function getWeek(dateString) {
 // Creates a workday for one client
 function createClientWorkdayByWorkday(workday, userId) {
     let clientWorkday = new Workday();
+    let isEmpty = true;
 
     // Add id
     clientWorkday._id = workday._id;
     // Add date
     clientWorkday.date = workday.date;
+    if (workday.date.getDay() === 0 || workday.date.getDay() === 6) {
+        isEmpty = false;
+    }
     // Add dayActivity
     workday.dayActivities.forEach(dayActivity =>
-        dayActivity.clients.forEach(client =>
-            (client._id.toString() === userId) ? clientWorkday.dayActivities.push(dayActivity) : null
-        )
+        dayActivity.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.dayActivities.push(dayActivity);
+                isEmpty = false;
+            }
+        })
     );
     // Add morningBus
     workday.morningBusses.forEach(morningBus =>
-        morningBus.clients.forEach(client =>
-            (client._id.toString() === userId) ? clientWorkday.morningBusses.push(morningBus) : null
-        )
+        morningBus.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.morningBusses.push(morningBus);
+                isEmpty = false;
+            }
+        })
     );
     // Add amActivity
     workday.amActivities.forEach(amActivity =>
-        amActivity.clients.forEach(client =>
-            (client._id.toString() === userId) ? clientWorkday.amActivities.push(amActivity) : null
-        )
+        amActivity.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.amActivities.push(amActivity);
+                isEmpty = false;
+            }
+        })
     );
     // Add lunch
     if (workday.lunch)
-        workday.lunch.clients.forEach(client =>
-            clientWorkday.lunch = (client._id.toString() === userId) ? workday.lunch : null
-        );
+        workday.lunch.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.lunch = workday.lunch;
+                isEmpty = false;
+            }
+        });
     // Add pmActivity
     workday.pmActivities.forEach(pmActivity =>
-        pmActivity.clients.forEach(client =>
-            (client._id.toString() === userId) ? clientWorkday.pmActivities.push(pmActivity) : null
-        )
+        pmActivity.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.pmActivities.push(pmActivity);
+                isEmpty = false;
+            }
+        })
     );
     // Add eveningBus
     workday.eveningBusses.forEach(eveningBus =>
-        eveningBus.clients.forEach(client =>
-            (client._id.toString() === userId) ? clientWorkday.eveningBusses.push(eveningBus) : null
-        )
+        eveningBus.clients.forEach(client => {
+            if (client._id.toString() === userId) {
+                clientWorkday.eveningBusses.push(eveningBus);
+                isEmpty = false;
+            }
+        })
     );
     // Add holiday
     clientWorkday.holiday = workday.holiday;
+    workday.holiday ? isEmpty = false : null;
     // Add comment
     for (let comment of workday.comments) {
         if (comment.client._id.toString() === userId)
             clientWorkday.comments.push(comment); break;
     }
+
+    if (isEmpty)
+        return;
 
     return clientWorkday;
 }
