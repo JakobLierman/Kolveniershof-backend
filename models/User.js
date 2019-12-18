@@ -41,10 +41,14 @@ UserSchema.methods.generateJWT = function () {
     return jwt.sign(
         {
             _id: this._id,
-            email: this.email,
             firstName: this.firstName,
             lastName: this.lastName,
+            email: this.email,
+            picture: this.picture,
+            address: this.address,
             admin: this.admin,
+            birthday: this.birthday,
+            absentDates: this.absentDates,
             exp: exp.getTime() / 1000
         },
         process.env.KOLV02_BACKEND_SECRET
