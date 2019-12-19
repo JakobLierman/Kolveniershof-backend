@@ -124,35 +124,52 @@ router.patch("/units/id/:lunchUnitId", auth, async function (req, res, next) {
     let workdaysWithUsage = await Workday.find({ lunch: req.lunchUnit }).lean();
     let workdayTemplatesWithUsage = await WorkdayTemplate.find({ lunch: req.lunchUnit }).lean();
 
+    // Check if has usages
+    const hasUsages = (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1;
     // Patch unit, return unit if new one is made
-    let newUnit = await patchUnit(req, res, next, req.lunchUnit,
-        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
-    // Replace unit in workday
-    if (req.body.workdayId) {
-        Workday.findById(req.body.workdayId, (err, workday) => {
-            if (err) return next(err);
-            if (!workday) return next(new Error("No workday found"));
-            // Replace unit
-            workday.lunch = newUnit;
-            workday.markModified("lunch");
-            // Save workday
-            workday.save(function (err, workday) {
+    let patchedUnit = await patchUnit(req, res, next, req.lunchUnit, hasUsages);
+
+    if (hasUsages) {
+        // Replace unit in workday
+        if (req.body.workdayId) {
+            await Workday.findById(req.body.workdayId, (err, workday) => {
                 if (err) return next(err);
-                res.json(newUnit);
+                if (!workday) return next(new Error("No workday found"));
+                // Replace unit
+                workday.lunch = patchedUnit;
+                workday.markModified("lunch");
+                // Save unit
+                patchedUnit.save(function (err, lunchUnit) {
+                    if (err) return next(err);
+                    // Save workday
+                    workday.save(function (err) {
+                        if (err) return next(err);
+                        res.json(lunchUnit);
+                    });
+                });
             });
-        });
-    } else if (req.body.workdayTemplateId) {
-        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
-            if (err) return next(err);
-            if (!workdayTemplate) return next(new Error("No workday template found"));
-            // Replace unit
-            workdayTemplate.lunch = newUnit;
-            workdayTemplate.markModified("lunch");
-            // Save workdayTemplate
-            workdayTemplate.save(function (err, workdayTemplate) {
+        } else if (req.body.workdayTemplateId) {
+            await WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
                 if (err) return next(err);
-                res.json(newUnit);
+                if (!workdayTemplate) return next(new Error("No workday template found"));
+                // Replace unit
+                workdayTemplate.lunch = patchedUnit;
+                workdayTemplate.markModified("lunch");
+                // Save unit
+                patchedUnit.save(function (err, lunchUnit) {
+                    if (err) return next(err);
+                    // Save workdayTemplate
+                    workdayTemplate.save(function (err) {
+                        if (err) return next(err);
+                        res.json(lunchUnit);
+                    });
+                });
             });
+        }
+    } else {
+        await patchedUnit.save(function (err, lunchUnit) {
+            if (err) return next(err);
+            res.json(lunchUnit);
         });
     }
 });
@@ -171,7 +188,13 @@ function deleteUnit(req, res, next, unit, hasUsages) {
 
 // Patch unit
 function patchUnit(req, res, next, unit, hasUsages) {
-    if (!hasUsages) {
+    if (hasUsages) {
+        return new LunchUnit({
+            lunch: req.body.lunch ? req.body.lunch : unit.lunch,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+    } else {
         if (req.body.lunch) {
             unit.lunch = req.body.lunch;
             unit.markModified("lunch");
@@ -184,17 +207,7 @@ function patchUnit(req, res, next, unit, hasUsages) {
             unit.clients = req.body.clients;
             unit.markModified("clients");
         }
-        unit.save(function (err, lunchUnit) {
-            if (err) return next(err);
-            res.json(lunchUnit);
-        });
-    } else {
-        let newUnit = new LunchUnit({
-            lunch: req.body.lunch ? req.body.lunch : unit.lunch,
-            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
-            clients: req.body.clients ? req.body.clients : unit.clients
-        });
-        return newUnit.save();
+        return unit;
     }
 }
 
