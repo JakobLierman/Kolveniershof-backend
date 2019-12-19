@@ -64,7 +64,7 @@ router.patch("/id/:busId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let bus = req.body.bus;
+    let bus = req.bus;
     if (req.body.name)
         bus.name = req.body.name;
     if (req.body.color)
