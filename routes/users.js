@@ -190,4 +190,12 @@ router.post("/addAbsentDate/:userId", auth, function(req, res, next) {
   });
 });
 
+/* DELETE user */
+router.delete("/id/:userId", auth, function (req, res, next) {
+  // Check permissions
+  if (!req.user.admin) return res.status(401).end();
+
+  res.status(501).send("Kan nog geen gebruikers verwijderen.");
+});
+
 module.exports = router;
