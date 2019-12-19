@@ -64,7 +64,7 @@ router.patch("/id/:activityId", auth, function (req, res, next) {
     // Check permissions
     if (!req.user.admin) return res.status(401).end();
 
-    let activity = req.body.activity;
+    let activity = req.activity;
     if (req.body.name)
         activity.name = req.body.name;
     if (req.body.icon)
