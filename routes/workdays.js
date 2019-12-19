@@ -9,7 +9,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET workdays */
 router.get('/', auth, function(req, res, next) {
-    let query = Workday.find();
+    let query = Workday.find().sort('date');
     populateWorkdays(query);
     query.exec(function(err, workdays) {
         if (err) return next(err);
@@ -60,7 +60,7 @@ router.param("weekdate", function (req, res, next, dateString) {
         return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
     const dates = getWeek(dateString);
 
-    let query = Workday.find({ date: { $in: dates } });
+    let query = Workday.find({ date: { $in: dates } }).sort('date');
     populateWorkdays(query);
     query.exec(function (err, workdays) {
         if (err) return next(err);
