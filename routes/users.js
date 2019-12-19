@@ -73,13 +73,16 @@ router.post("/isValidEmail", function(req, res, next) {
   if (!req.body.email)
     return res.status(400).json("Please fill out all fields.");
 
-  User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
-    if (result.length) {
-      res.send(false);
-    } else {
-      res.send(validator.validate(req.body.email.trim().toLowerCase()));
-    }
-  });
+  if (req.body.oldEmail)
+    if (req.body.email === req.body.oldEmail)
+      res.send(true);
+    else
+      User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
+        if (result.length)
+          res.send(false);
+        else
+          res.send(validator.validate(req.body.email.trim().toLowerCase()));
+      });
 });
 
 router.post("/register", function(req, res, next) {
@@ -185,6 +188,14 @@ router.post("/addAbsentDate/:userId", auth, function(req, res, next) {
     if (err) return next(err);
     return res.json(user);
   });
+});
+
+/* DELETE user */
+router.delete("/id/:userId", auth, function (req, res, next) {
+  // Check permissions
+  if (!req.user.admin) return res.status(401).end();
+
+  res.status(501).send("Kan nog geen gebruikers verwijderen.");
 });
 
 module.exports = router;
