@@ -54,7 +54,7 @@ router.get("/names", auth, function (req, res, next) {
 
 /* GET workday templates by name */
 router.param("name", function (req, res, next, name) {
-    let query = WorkdayTemplate.find({ templateName: name });
+    let query = WorkdayTemplate.find({ templateName: name }).sort({weekNumber: 1, dayNumber: 1});
     populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
