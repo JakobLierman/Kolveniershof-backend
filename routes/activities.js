@@ -275,7 +275,7 @@ router.patch("/units/id/:activityUnitId", auth, async function (req, res, next) 
         await patchedUnit.save(function (err, activityUnit) {
             if (err) return next(err);
             res.json(activityUnit);
-        })
+        });
     }
 });
 
