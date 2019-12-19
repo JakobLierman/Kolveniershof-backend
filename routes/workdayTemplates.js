@@ -54,7 +54,7 @@ router.get("/names", auth, function (req, res, next) {
 
 /* GET workday templates by name */
 router.param("name", function (req, res, next, name) {
-    let query = WorkdayTemplate.find({ templateName: name });
+    let query = WorkdayTemplate.find({ templateName: name }).sort({weekNumber: 1, dayNumber: 1});
     populateWorkdayTemplates(query);
     query.exec(function (err, workdayTemplates) {
         if (err) return next(err);
@@ -231,68 +231,91 @@ router.post("/createWeek/:templateName/:weekToCopy/:date", auth, function (req, 
 
     const dateString = req.params.date;
     if(!checkDateFormat(dateString))
-        return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
+        return res.status(400).send("Please insert a valid date (format: DD_MM_YYYY).");
     const dates = getWeek(dateString);
 
     // Check if full week is present
-    WorkdayTemplate.find({templateName: req.params.templateName, week: req.params.weekToCopy}).exec(function (err, items) {
+    WorkdayTemplate.find({templateName: req.params.templateName, weekNumber: req.params.weekToCopy}).exec(function (err, items) {
         if (err) return next(err);
         if (items.length !== 5)
-            return res.status(409).json({ message: "Week does not contain all workday templates yet." });
+            return res.status(409).send("Week bevat nog niet alle templates."); // TODO - i18n
         else {
             // Check if workday is present at given dates
-            Workday.find({ date: { $in: dates } }).exec(function (err, workdays) {
+            Workday.find({ date: { $in: dates } }).exec(async function (err, workdays) {
                 if (err) return next(err);
                 const daysPresent = [];
                 workdays.forEach(workday => { daysPresent.push(workday.date.toString().split(' ')[0]) });
-                console.log(daysPresent);
                 if (daysPresent.length > 0)
-                    return res.status(409).json({ message: "Workdays already present on " + daysPresent });
+                    return res.status(409).send("Er zijn al gevulde dagen op " + daysPresent + '.'); // TODO - i18n
                 else {
                     // Copy template content, create new workDays
-                    let resultJson = {};
-                    dates.forEach(date => {
-                        if (date.getDay() === (6 || 0)) {
-                            let workday = new Workday({
+                    const workdays = [];
+                    for (const date of dates) {
+                        if (date.getDay() === 6 || date.getDay() === 0) {
+                            workdays.push(new Workday({
                                 date: date,
                                 originalTemplateName: req.params.templateName,
                                 originalWeekNumber: req.params.weekToCopy
-                            });
-                            workday.save(function (err, workday) {
-                                if (err) return next(err);
-                                // Add workday to json
-                                resultJson[date.toString().split(' ')[0]] = workday;
-                            });
+                            }));
                         } else {
-                            WorkdayTemplate.findOne({
+                            let template = await WorkdayTemplate.findOne({
                                 templateName: req.params.templateName,
                                 weekNumber: req.params.weekToCopy,
                                 dayNumber: date.getDay()
-                            }).exec(function (err, template) {
-                                if (err) return next(err);
-                                // Create new workday
-                                let workday = new Workday({
-                                    date: date,
-                                    originalTemplateName: template.templateName,
-                                    originalWeekNumber: template.weekNumber,
-                                    dayActivities: template.dayActivities,
-                                    daycareMentors: template.daycareMentors,
-                                    morningBusses: template.morningBusses,
-                                    amActivities: template.amActivities,
-                                    lunch: template.lunch,
-                                    pmActivities: template.pmActivities,
-                                    eveningBusses: template.eveningBusses,
-                                    holiday: false
-                                });
-                                workday.save(function (err, workday) {
-                                    if (err) return next(err);
-                                    // Add workday to json
-                                    resultJson[date.toString().split(' ')[0]] = workday;
+                            }).lean();
+                            // Create new workday
+                            workdays.push(new Workday({
+                                date: date,
+                                originalTemplateName: template.templateName,
+                                originalWeekNumber: template.weekNumber,
+                                dayActivities: template.dayActivities,
+                                daycareMentors: template.daycareMentors,
+                                morningBusses: template.morningBusses,
+                                amActivities: template.amActivities,
+                                lunch: template.lunch,
+                                pmActivities: template.pmActivities,
+                                eveningBusses: template.eveningBusses,
+                                holiday: template.holiday
+                            }));
+                        }
+                    }
+
+                    // TODO - fix this mess
+                    async function addToJson(json, workday) {
+                        json.push(await Workday.findOne({_id: workday._id}).lean()
+                            .populate({ path: "dayActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "daycareMentors", select: '-salt -hash' })
+                            .populate({ path: "morningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "amActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "lunch", populate: [{ path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "pmActivities", populate: ['activity', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "eveningBusses", populate: ['bus', { path: 'mentors', select: '-salt -hash' }, { path: 'clients', select: '-salt -hash' }] })
+                            .populate({ path: "comments.client", select: '-salt -hash' }));
+                    }
+
+                    let resultJson = [];
+                    workdays[0].save().then(async workday => {
+                        await addToJson(resultJson, workday);
+                        workdays[1].save().then(async workday => {
+                            await addToJson(resultJson, workday);
+                            workdays[2].save().then(async workday => {
+                                await addToJson(resultJson, workday);
+                                workdays[3].save().then(async workday => {
+                                    await addToJson(resultJson, workday);
+                                    workdays[4].save().then(async workday => {
+                                        await addToJson(resultJson, workday);
+                                        workdays[5].save().then(async workday => {
+                                            await addToJson(resultJson, workday);
+                                            workdays[6].save().then(async workday => {
+                                                await addToJson(resultJson, workday);
+                                                res.json(resultJson);
+                                            });
+                                        });
+                                    });
                                 });
                             });
-                        }
+                        });
                     });
-                    res.json(resultJson);
                 }
             });
         }

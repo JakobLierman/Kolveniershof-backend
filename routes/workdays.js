@@ -9,7 +9,7 @@ let auth = jwt({ secret: process.env.KOLV02_BACKEND_SECRET });
 
 /* GET workdays */
 router.get('/', auth, function(req, res, next) {
-    let query = Workday.find();
+    let query = Workday.find().sort('date');
     populateWorkdays(query);
     query.exec(function(err, workdays) {
         if (err) return next(err);
@@ -60,7 +60,7 @@ router.param("weekdate", function (req, res, next, dateString) {
         return res.status(400).json("Please insert a valid date (format: DD_MM_YYYY).");
     const dates = getWeek(dateString);
 
-    let query = Workday.find({ date: { $in: dates } });
+    let query = Workday.find({ date: { $in: dates } }).sort('date');
     populateWorkdays(query);
     query.exec(function (err, workdays) {
         if (err) return next(err);
@@ -130,20 +130,38 @@ router.post("/week/:weekdate", auth, function (req, res, next) {
     if (req.workdays.length !== 0) return res.status(409).send("Week not empty");
 
     // Create workdays for full week
-    let resultJson = {};
+    let workdays = [];
     getWeek(req.params.weekdate).forEach(date => {
         // Create new workday
-        let workday = new Workday({
+        workdays.push(new Workday({
             date: date,
             holiday: false
-        });
-        workday.save(function (err, workday) {
-            if (err) return next(err);
-            // Add workday to json
-            resultJson[date.toString().split(' ')[0]] = workday;
+        }));
+    });
+
+    let resultJson = [];
+    workdays[0].save().then(workday => {
+        resultJson.push(workday);
+        workdays[1].save().then(workday => {
+            resultJson.push(workday);
+            workdays[2].save().then(workday => {
+                resultJson.push(workday);
+                workdays[3].save().then(workday => {
+                    resultJson.push(workday);
+                    workdays[4].save().then(workday => {
+                        resultJson.push(workday);
+                        workdays[5].save().then(workday => {
+                            resultJson.push(workday);
+                            workdays[6].save().then(workday => {
+                                resultJson.push(workday);
+                                res.json(resultJson);
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
-    res.json(resultJson);
 });
 
 /* DELETE workday */
