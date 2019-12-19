@@ -211,54 +211,71 @@ router.patch("/units/id/:activityUnitId", auth, async function (req, res, next) 
         $or: [{ amActivities: req.activityUnit }, { pmActivities: req.activityUnit }]
     }).lean();
 
+    // Check if has usages
+    const hasUsages = (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1;
     // Patch unit, return unit if new one is made
-    let newUnit = await patchUnit(req, res, next, req.activityUnit,
-        (workdaysWithUsage.length + workdayTemplatesWithUsage.length) > 1);
-    // Replace unit in workday
-    if (req.body.workdayId) {
-        Workday.findById(req.body.workdayId, (err, workday) => {
-            if (err) return next(err);
-            if (!workday) return next(new Error("No workday found"));
-            // Find index for unit
-            let amIndex = array.findIndex(workday.amActivities, req.activityUnit._id);
-            let pmIndex = array.findIndex(workday.pmActivities, req.activityUnit._id);
-            // Replace unit
-            if (amIndex !== -1) {
-                workday.amActivities.splice(amIndex, 1, newUnit);
-                workday.markModified("amActivities");
-            }
-            if (pmIndex !== -1) {
-                workday.pmActivities.splice(pmIndex, 1, newUnit);
-                workday.markModified("pmActivities");
-            }
-            // Save workday
-            workday.save(function (err, workday) {
+    let patchedUnit = patchUnit(req, res, next, req.activityUnit, hasUsages);
+
+    if (hasUsages) {
+        // Replace unit in workday
+        if (req.body.workdayId) {
+            await Workday.findById(req.body.workdayId, (err, workday) => {
                 if (err) return next(err);
-                res.json(newUnit);
+                if (!workday) return next(new Error("No workday found"));
+                // Find index for unit
+                let amIndex = array.findIndex(workday.amActivities, req.activityUnit._id);
+                let pmIndex = array.findIndex(workday.pmActivities, req.activityUnit._id);
+                // Replace unit
+                if (amIndex !== -1) {
+                    workday.amActivities.splice(amIndex, 1, patchedUnit);
+                    workday.markModified("amActivities");
+                }
+                if (pmIndex !== -1) {
+                    workday.pmActivities.splice(pmIndex, 1, patchedUnit);
+                    workday.markModified("pmActivities");
+                }
+                // Save unit
+                patchedUnit.save(function (err, activityUnit) {
+                    if (err) return next(err);
+                    // Save workday
+                    workday.save(function (err) {
+                        if (err) return next(err);
+                        res.json(activityUnit);
+                    });
+                });
             });
-        });
-    } else if (req.body.workdayTemplateId) {
-        WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
-            if (err) return next(err);
-            if (!workdayTemplate) return next(new Error("No workday template found"));
-            // Find index for unit
-            let amIndex = array.findIndex(workdayTemplate.amActivities, req.activityUnit._id);
-            let pmIndex = array.findIndex(workdayTemplate.pmActivities, req.activityUnit._id);
-            // Replace unit
-            if (amIndex !== -1) {
-                workdayTemplate.amActivities.splice(amIndex, 1, newUnit);
-                workdayTemplate.markModified("amActivities");
-            }
-            if (pmIndex !== -1) {
-                workdayTemplate.pmActivities.splice(pmIndex, 1, newUnit);
-                workdayTemplate.markModified("pmActivities");
-            }
-            // Save workdayTemplate
-            workdayTemplate.save(function (err, workdayTemplate) {
+        } else if (req.body.workdayTemplateId) {
+            await WorkdayTemplate.findById(req.body.workdayTemplateId, (err, workdayTemplate) => {
                 if (err) return next(err);
-                res.json(newUnit);
+                if (!workdayTemplate) return next(new Error("No workday template found"));
+                // Find index for unit
+                let amIndex = array.findIndex(workdayTemplate.amActivities, req.activityUnit._id);
+                let pmIndex = array.findIndex(workdayTemplate.pmActivities, req.activityUnit._id);
+                // Replace unit
+                if (amIndex !== -1) {
+                    workdayTemplate.amActivities.splice(amIndex, 1, patchedUnit);
+                    workdayTemplate.markModified("amActivities");
+                }
+                if (pmIndex !== -1) {
+                    workdayTemplate.pmActivities.splice(pmIndex, 1, patchedUnit);
+                    workdayTemplate.markModified("pmActivities");
+                }
+                // Save unit
+                patchedUnit.save(function (err, activityUnit) {
+                    if (err) return next(err);
+                    // Save workdayTemplate
+                    workdayTemplate.save(function (err) {
+                        if (err) return next(err);
+                        res.json(activityUnit);
+                    });
+                });
             });
-        });
+        }}
+    else {
+        await patchedUnit.save(function (err, activityUnit) {
+            if (err) return next(err);
+            res.json(activityUnit);
+        })
     }
 });
 
@@ -276,10 +293,16 @@ function deleteUnit(req, res, next, unit, hasUsages) {
 
 // Patch unit
 function patchUnit(req, res, next, unit, hasUsages) {
-    if (!hasUsages) {
+    if (hasUsages) {
+        return new ActivityUnit({
+            activity: req.body.activity ? req.body.activity : unit.activity,
+            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
+            clients: req.body.clients ? req.body.clients : unit.clients
+        });
+    } else {
         if (req.body.activity) {
             unit.activity = req.body.activity;
-            unit.markModified("bus");
+            unit.markModified("activity");
         }
         if (req.body.mentors) {
             unit.mentors = req.body.mentors;
@@ -289,17 +312,7 @@ function patchUnit(req, res, next, unit, hasUsages) {
             unit.clients = req.body.clients;
             unit.markModified("clients");
         }
-        unit.save(function (err, activityUnit) {
-            if (err) return next(err);
-            res.json(activityUnit);
-        });
-    } else {
-        let newUnit = new ActivityUnit({
-            activity: req.body.activity ? req.body.activity : unit.activity,
-            mentors: req.body.mentors ? req.body.mentors : unit.mentors,
-            clients: req.body.clients ? req.body.clients : unit.clients
-        });
-        return newUnit.save();
+        return unit;
     }
 }
 
