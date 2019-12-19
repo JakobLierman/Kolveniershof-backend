@@ -130,20 +130,38 @@ router.post("/week/:weekdate", auth, function (req, res, next) {
     if (req.workdays.length !== 0) return res.status(409).send("Week not empty");
 
     // Create workdays for full week
-    let resultJson = {};
+    let workdays = [];
     getWeek(req.params.weekdate).forEach(date => {
         // Create new workday
-        let workday = new Workday({
+        workdays.push(new Workday({
             date: date,
             holiday: false
-        });
-        workday.save(function (err, workday) {
-            if (err) return next(err);
-            // Add workday to json
-            resultJson[date.toString().split(' ')[0]] = workday;
+        }));
+    });
+
+    let resultJson = [];
+    workdays[0].save().then(workday => {
+        resultJson.push(workday);
+        workdays[1].save().then(workday => {
+            resultJson.push(workday);
+            workdays[2].save().then(workday => {
+                resultJson.push(workday);
+                workdays[3].save().then(workday => {
+                    resultJson.push(workday);
+                    workdays[4].save().then(workday => {
+                        resultJson.push(workday);
+                        workdays[5].save().then(workday => {
+                            resultJson.push(workday);
+                            workdays[6].save().then(workday => {
+                                resultJson.push(workday);
+                                res.json(resultJson);
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
-    res.json(resultJson);
 });
 
 /* DELETE workday */
