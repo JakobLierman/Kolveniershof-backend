@@ -12,11 +12,11 @@ This project is part of the [Project III: Mobile apps](https://bamaflexweb.hogen
 
 ## Getting Started
 
-The server is currently hosted by [Heroku](https://www.heroku.com/) [![Heroku Backend Status](http://heroku-shields.herokuapp.com/kolv02-backend)](https://kolv02-backend.herokuapp.com/API).
+The server is currently hosted by [Heroku](https://www.heroku.com/) [![Website](https://img.shields.io/website?label=backend&logo=heroku&url=https%3A%2F%2Fkolv02-backend.herokuapp.com%2Fdocs)](https://kolv02-backend.herokuapp.com/docs).
 
-> ### `https://kolv02-backend.herokuapp.com/API`
+> ### [`https://kolv02-backend.herokuapp.com/API`](https://kolv02-backend.herokuapp.com/docs)
 
-[**Visit the documentation website**](https://kolv02-backend.herokuapp.com/API)
+[**Visit the documentation website**](https://kolv02-backend.herokuapp.com/docs)
 
 ### Installation
 
