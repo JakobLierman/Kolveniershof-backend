@@ -74,15 +74,17 @@ router.post("/isValidEmail", function(req, res, next) {
     return res.status(400).json("Please fill out all fields.");
 
   if (req.body.oldEmail)
-    if (req.body.email === req.body.oldEmail)
+    if (req.body.email === req.body.oldEmail) {
       res.send(true);
+      return;
+    }
+
+  User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
+    if (result.length)
+      res.send(false);
     else
-      User.find({ email: req.body.email.trim().toLowerCase() }, function(err, result) {
-        if (result.length)
-          res.send(false);
-        else
-          res.send(validator.validate(req.body.email.trim().toLowerCase()));
-      });
+      res.send(validator.validate(req.body.email.trim().toLowerCase()));
+  });
 });
 
 router.post("/register", function(req, res, next) {
