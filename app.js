@@ -40,12 +40,12 @@ var workdayTemplatesRouter = require('./routes/workdayTemplates');
 
 var app = express();
 
-// Swagger endpoint
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 // cors for cross origin requests
 let cors = require('cors');
-app.use(cors({ origin: '*' }));
+app.use(cors());
+
+// Swagger endpoint
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(logger('dev'));
 app.use(express.json());
