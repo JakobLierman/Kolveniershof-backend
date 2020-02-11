@@ -1,3 +1,5 @@
+**NOTE: This was a group assignment. View all commits carefully to get an insight into my abilities. The end result is suboptimal due to complications during this project. Please contact me for more information.**
+
 <p align="center"><img src="./backend_icon.svg" width="200px"/></p>
 
 <h1 align="center">Kolveniershof API</h1>
@@ -23,13 +25,13 @@ The server is currently hosted by [Heroku](https://www.heroku.com/) [![Website](
 1. Clone this repo
 
    ```bash
-   git clone https://github.com/HoGent-Projecten3/projecten3-1920-angular-kolv02
+   git clone https://github.com/JakobLierman/Kolveniershof-backend
    ```
 
 2. Open the project root directory
 
    ```bash
-   cd projecten3-1920-angular-kolv02
+   cd Kolveniershof-backend
    ```
 
 3. Install dependencies from npm
@@ -55,7 +57,7 @@ The server is currently hosted by [Heroku](https://www.heroku.com/) [![Website](
 > Copy paste this in your terminal if you're lazy. 😴
 >
 > ```bash
-> git clone https://github.com/HoGent-Projecten3/projecten3-1920-backend-kolv02 && cd projecten3-1920-backend-kolv02 && npm i && npm start
+> git clone https://github.com/JakobLierman/Kolveniershof-backend && cd Kolveniershof-backend && npm i && npm start
 > ```
 
 #### Dummy login
